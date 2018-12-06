@@ -43,7 +43,6 @@ const secondMonthlyQuery = (endDateTime: Moment, oneMonthBeforeEnd: Moment, coun
         'FROM acquisition_events ' +
         `WHERE countrycode in (${countryCodesString}) ` +
         `AND timestamp >= CAST('${oneMonthBeforeEnd.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
-        `AND timestamp < CAST('${endDateTime.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
         `AND paymentfrequency='Monthly'`,
     'acquisition_events_secondMonthlyQuery'
 );
