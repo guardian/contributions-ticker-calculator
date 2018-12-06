@@ -41,7 +41,7 @@ function executeQuery(query: Query): Promise<number> {
     return athena.startQueryExecution(params).promise()
         .then((startQueryExecutionOutput: StartQueryExecutionOutput) =>
             //TODO - this isn't great, should we use 2 lambdas? Step functions?
-            new Promise((resolve, reject) => setTimeout(() => resolve(startQueryExecutionOutput), 5000))
+            new Promise((resolve, reject) => setTimeout(() => resolve(startQueryExecutionOutput), 20000))
         )
         .then((startQueryExecutionOutput: StartQueryExecutionOutput) =>
             athena.getQueryExecution({QueryExecutionId: startQueryExecutionOutput.QueryExecutionId}).promise()
