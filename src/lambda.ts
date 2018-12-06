@@ -8,12 +8,15 @@ import {
 import moment = require("moment");
 import {Moment} from "moment";
 import {getQueries, Query} from "./queries";
+import {ManagedUpload} from "aws-sdk/lib/s3/managed_upload";
 
 const AWS = require('aws-sdk');
 const config = new Config();
 const athena = new AWS.Athena({region: 'eu-west-1'});
+const s3 = new AWS.S3();
 
-export async function handler(): Promise<number> {
+export async function handler(): Promise<ManagedUpload.SendData> {
+
     const startDateTime: Moment = moment(config.StartDateTime);
     const endDateTime: Moment = moment(config.EndDateTime);
 
@@ -24,6 +27,7 @@ export async function handler(): Promise<number> {
     return Promise.all(queries.map(executeQuery))
         .then((amounts: number[]) => amounts.reduce((sum, v) => sum + v))
         .then((result: number) => result + config.InitialAmount)
+        .then((result: number) => updateTicker(config.TickerBucket, result))
 }
 
 function executeQuery(query: Query): Promise<number> {
@@ -59,4 +63,12 @@ function executeQuery(query: Query): Promise<number> {
                 else reject(`Missing result in query output: ${JSON.stringify(getQueryResultsOutput)}`)
             })
         )
+}
+
+function updateTicker(tickerBucket: string, value: number): Promise<ManagedUpload.SendData> {
+    return s3.upload({
+        Bucket: tickerBucket,
+        Key: 'ticker.txt',
+        Body: value.toString()
+    }).promise();
 }
