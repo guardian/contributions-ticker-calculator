@@ -69,6 +69,7 @@ function updateTicker(tickerBucket: string, value: number): Promise<ManagedUploa
     return s3.upload({
         Bucket: tickerBucket,
         Key: 'ticker.txt',
-        Body: value.toString()
+        Body: value.toString(),
+        ACL: 'public-read'
     }).promise();
 }
