@@ -44,6 +44,12 @@ Parameters:
     Description: Bucket to output the result to
     Type: String
     Default: contributions-ticker
+  StartDateTime:
+    Description: The start of the campaign, e.g. 2018-01-01
+    Type: String
+  EndDateTime:
+    Description: The end of the campaign, e.g. 2018-02-01
+    Type: String
 
 Resources:
   Lambda:
@@ -64,6 +70,8 @@ Resources:
           InitialAmount: !Ref InitialAmount
           CountryCodes: !Ref CountryCodes
           TickerBucket: !Ref TickerBucket
+          StartDateTime: !Ref StartDateTime
+          EndDateTime: !Ref EndDateTime
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
@@ -73,23 +81,21 @@ Resources:
         - Statement:
             Effect: Allow
             Action:
-              - s3:GetObject
-              - s3:ListObjects
+              - s3:*
             Resource:
-              !Sub "arn:aws:s3::*:${AcquisitionEventsBucket}"
+              - !Sub "arn:aws:s3::*:${AcquisitionEventsBucket}/*"
+              - !Sub "arn:aws:s3::*:${AcquisitionEventsBucket}"
         - Statement:
             Effect: Allow
             Action:
-              - s3:GetObject
-              - s3:ListObjects
-              - s3:PutObject
+              - s3:*
             Resource:
-              !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}/*"
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
         - Statement:
             Effect: Allow
             Action:
-            - s3:GetObject
-            - s3:ListObjects
-            - s3:PutObject
+              - s3:*
             Resource:
-              !Sub "arn:aws:s3::*:${TickerBucket}"
+              - !Sub "arn:aws:s3::*:${TickerBucket}/*"
+              - !Sub "arn:aws:s3::*:${TickerBucket}"
