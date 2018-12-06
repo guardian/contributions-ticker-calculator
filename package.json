@@ -2,7 +2,7 @@
   "name": "contributions-ticker-calculator",
   "isAwsLambda": true,
   "cloudformation": false,
-  "projectName": "Membership::contributions-ticker-calculator",
+  "projectName": "Contributions::contributions-ticker-calculator",
   "buildDir": "./target",
   "riffraffFile": "./riff-raff.yaml",
   "dependencies": {

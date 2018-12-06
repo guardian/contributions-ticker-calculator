@@ -20,7 +20,7 @@ Parameters:
   DeployBucket:
     Description: Bucket to copy files to
     Type: String
-    Default: contributions-dist
+    Default: membership-dist
   AcquisitionEventsBucket:
     Description: Bucket containing the data to be queried
     Type: String
@@ -28,6 +28,7 @@ Parameters:
   AthenaOutputBucket:
     Description: Name of the bucket to output athena query results to
     Type: String
+    Default: acquisition-events-output
   SchemaName:
     Description: The schema name for the query
     Type: String
@@ -37,8 +38,12 @@ Parameters:
     Type: Number
     Default: 0
   CountryCodes:
-    Description: List of country codes, e.g. 'US,AU'
-    Type: CommaDelimitedList
+    Description: Comma-separated, quoted list of country codes, e.g. 'US,AU'. Note - cannot use CommaDelimitedList type if passing into environment variables
+    Type: String
+  TickerBucket:
+    Description: Bucket to output the result to
+    Type: String
+    Default: contributions-ticker
 
 Resources:
   Lambda:
@@ -58,22 +63,33 @@ Resources:
           SchemaName: !Ref SchemaName
           InitialAmount: !Ref InitialAmount
           CountryCodes: !Ref CountryCodes
+          TickerBucket: !Ref TickerBucket
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
       Policies:
         - AWSLambdaBasicExecutionRole
+        - AmazonAthenaFullAccess
         - Statement:
             Effect: Allow
             Action:
               - s3:GetObject
               - s3:ListObjects
             Resource:
-              !Ref AcquisitionEventsBucket
+              !Sub "arn:aws:s3::*:${AcquisitionEventsBucket}"
         - Statement:
             Effect: Allow
             Action:
               - s3:GetObject
               - s3:ListObjects
+              - s3:PutObject
             Resource:
               !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
+        - Statement:
+            Effect: Allow
+            Action:
+            - s3:GetObject
+            - s3:ListObjects
+            - s3:PutObject
+            Resource:
+              !Sub "arn:aws:s3::*:${TickerBucket}"
