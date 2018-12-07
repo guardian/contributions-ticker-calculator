@@ -17,7 +17,8 @@
   "scripts": {
     "clean": "rm -rf target",
     "build": "tsc",
-    "local": "node target/local.js",
+    "query-local": "node target/query-lambda/local.js",
+    "calculate-local": "node target/calculate-lambda/local.js",
     "package": "ARTEFACT_PATH=$PWD/target VERBOSE=true riffraff-artefact"
   }
 }
