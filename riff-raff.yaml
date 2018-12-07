@@ -8,4 +8,4 @@ deployments:
       prefixStack: false
       bucket: membership-dist
       fileName: contributions-ticker-calculator.zip
-      functionNames: [contributions-ticker-calculator-]
+      functionNames: [contributions-ticker-query-lambda-]
