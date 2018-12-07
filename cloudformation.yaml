@@ -1,0 +1,101 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Calculates total amount contributed during a campaign, for use by a ticker
+
+Parameters:
+  Stack:
+    Description: Stack name
+    Type: String
+    Default: support
+  App:
+    Description: Application name
+    Type: String
+    Default: contributions-ticker-calculator
+  Stage:
+    Description: Stage name
+    Type: String
+    AllowedValues:
+      - CODE
+      - PROD
+  DeployBucket:
+    Description: Bucket to copy files to
+    Type: String
+    Default: membership-dist
+  AcquisitionEventsBucket:
+    Description: Bucket containing the data to be queried
+    Type: String
+    Default: acquisition-events
+  AthenaOutputBucket:
+    Description: Name of the bucket to output athena query results to
+    Type: String
+    Default: acquisition-events-output
+  SchemaName:
+    Description: The schema name for the query
+    Type: String
+    Default: acquisition
+  InitialAmount:
+    Description: Amount to add to the result of the query
+    Type: Number
+    Default: 0
+  CountryCodes:
+    Description: Comma-separated, quoted list of country codes, e.g. 'US,AU'. Note - cannot use CommaDelimitedList type if passing into environment variables
+    Type: String
+  TickerBucket:
+    Description: Bucket to output the result to
+    Type: String
+    Default: contributions-ticker
+  StartDateTime:
+    Description: The start of the campaign, e.g. 2018-01-01
+    Type: String
+  EndDateTime:
+    Description: The end of the campaign, e.g. 2018-02-01
+    Type: String
+
+Resources:
+  Lambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub ${App}-${Stage}
+      Description: Calculates total amount contributed during a campaign, for use by a ticker
+      Runtime: nodejs8.10
+      Handler: lambda.handler
+      MemorySize: 128
+      Timeout: 300
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          AcquisitionEventsBucket: !Ref AcquisitionEventsBucket
+          AthenaOutputBucket: !Ref AthenaOutputBucket
+          SchemaName: !Ref SchemaName
+          InitialAmount: !Ref InitialAmount
+          CountryCodes: !Ref CountryCodes
+          TickerBucket: !Ref TickerBucket
+          StartDateTime: !Ref StartDateTime
+          EndDateTime: !Ref EndDateTime
+      CodeUri:
+        Bucket: !Ref DeployBucket
+        Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AmazonAthenaFullAccess
+        - Statement:
+            Effect: Allow
+            Action:
+              - s3:*
+            Resource:
+              - !Sub "arn:aws:s3::*:${AcquisitionEventsBucket}/*"
+              - !Sub "arn:aws:s3::*:${AcquisitionEventsBucket}"
+        - Statement:
+            Effect: Allow
+            Action:
+              - s3:*
+            Resource:
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}/*"
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
+        - Statement:
+            Effect: Allow
+            Action:
+              - s3:*
+            Resource:
+              - !Sub "arn:aws:s3::*:${TickerBucket}/*"
+              - !Sub "arn:aws:s3::*:${TickerBucket}"
