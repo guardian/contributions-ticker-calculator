@@ -29,7 +29,7 @@ function getExecutionState(executionId: string): Promise<QueryExecutionState> {
 }
 
 function checkExecutionState(state: QueryExecutionState): Promise<QueryExecutionState> {
-    if (state === 'QUEUED' || state === 'RUNNING') return Promise.reject('Query still pending');
+    if (state === 'QUEUED' || state === 'RUNNING') return Promise.reject('Query pending');
     else if (state === 'FAILED' || state === 'CANCELLED') return Promise.reject('Query failed to run');
     else return Promise.resolve(state)
 }
