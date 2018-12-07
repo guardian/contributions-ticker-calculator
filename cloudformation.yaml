@@ -55,8 +55,8 @@ Resources:
   Lambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub ${App}-${Stage}
-      Description: Calculates total amount contributed during a campaign, for use by a ticker
+      FunctionName: !Sub contributions-ticker-query-lambda-${Stage}
+      Description: Queries Athena for total amounts contributed during a campaign
       Runtime: nodejs8.10
       Handler: lambda.handler
       MemorySize: 128
