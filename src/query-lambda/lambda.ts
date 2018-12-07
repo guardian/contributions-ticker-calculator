@@ -24,6 +24,7 @@ export async function handler(): Promise<string[]> {
 }
 
 function executeQuery(query: Query): Promise<string> {
+    console.log(`AthenaOutputBucket: ${config.AthenaOutputBucket}`)
     const params: StartQueryExecutionInput = {
         QueryString: query.query,
         ResultConfiguration: {
