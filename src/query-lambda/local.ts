@@ -1,4 +1,4 @@
-import { handler } from './lambda';
+import { handler } from './query-lambda';
 let AWS = require('aws-sdk');
 
 /**
