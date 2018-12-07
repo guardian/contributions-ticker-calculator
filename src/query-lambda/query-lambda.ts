@@ -1,5 +1,5 @@
 import {Config} from '../config';
-import {StartQueryExecutionInput} from "aws-sdk/clients/athena";
+import {StartQueryExecutionInput, StartQueryExecutionOutput} from "aws-sdk/clients/athena";
 import moment = require("moment");
 import {Moment} from "moment";
 import {getQueries, Query} from "./queries";
@@ -21,9 +21,10 @@ export async function handler(): Promise<string[]> {
     const queries = getQueries(startDateTime, endDateTime, config.CountryCodesString);
 
     return Promise.all(queries.map(executeQuery))
+        .then((results: StartQueryExecutionOutput[]) => results.map(result => result.QueryExecutionId))
 }
 
-function executeQuery(query: Query): Promise<string> {
+function executeQuery(query: Query): Promise<StartQueryExecutionOutput> {
     console.log(`AthenaOutputBucket: ${config.AthenaOutputBucket}`)
     const params: StartQueryExecutionInput = {
         QueryString: query.query,
