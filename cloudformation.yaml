@@ -176,7 +176,7 @@ Resources:
                   "Resource": "${CalculateLambdaArn}",
                   "End": true,
                   "Retry": [{
-                    "ErrorEquals": ["Query pending"],
+                    "ErrorEquals": ["QueryPendingError"],
                     "IntervalSeconds": 5,
                     "MaxAttempts": 5
                   }]

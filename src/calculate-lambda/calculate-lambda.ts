@@ -1,6 +1,7 @@
 import {Config} from "../config";
 import {ManagedUpload} from "aws-sdk/lib/s3/managed_upload";
 import {GetQueryExecutionOutput, GetQueryResultsOutput, QueryExecutionState} from "aws-sdk/clients/athena";
+import {QueryFailedError, QueryPendingError} from "./errors";
 
 const AWS = require('aws-sdk');
 const config = new Config();
@@ -29,8 +30,8 @@ function getExecutionState(executionId: string): Promise<QueryExecutionState> {
 }
 
 function checkExecutionState(state: QueryExecutionState): Promise<QueryExecutionState> {
-    if (state === 'QUEUED' || state === 'RUNNING') return Promise.reject('Query pending');
-    else if (state === 'FAILED' || state === 'CANCELLED') return Promise.reject('Query failed to run');
+    if (state === 'QUEUED' || state === 'RUNNING') return Promise.reject(new QueryPendingError());
+    else if (state === 'FAILED' || state === 'CANCELLED') return Promise.reject(new QueryFailedError());
     else return Promise.resolve(state)
 }
 
