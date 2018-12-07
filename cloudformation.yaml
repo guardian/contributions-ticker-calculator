@@ -59,7 +59,7 @@ Resources:
       FunctionName: !Sub contributions-ticker-query-lambda-${Stage}
       Description: Queries Athena for total amounts contributed during a campaign
       Runtime: nodejs8.10
-      Handler: query-lambda.handler
+      Handler: query-lambda/query-lambda.handler
       MemorySize: 128
       Timeout: 300
       Environment:
@@ -100,7 +100,7 @@ Resources:
       FunctionName: !Sub contributions-ticker-calculate-lambda-${Stage}
       Description: Gets the results of the Athena queries and updates the public ticker file
       Runtime: nodejs8.10
-      Handler: calculate-lambda.handler
+      Handler: calculate-lambda/calculate-lambda.handler
       MemorySize: 128
       Timeout: 300
       Environment:
