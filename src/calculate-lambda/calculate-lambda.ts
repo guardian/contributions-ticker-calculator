@@ -37,14 +37,16 @@ function checkExecutionState(state: QueryExecutionState): Promise<QueryExecution
 
 function getExecutionResult(executionId: string): Promise<number> {
     return athena.getQueryResults({ QueryExecutionId: executionId }).promise()
-        .then((getQueryResultsOutput: GetQueryResultsOutput) =>
-            new Promise((resolve, reject) => {
-                const value = parseFloat(getQueryResultsOutput.ResultSet.Rows[1].Data[0].VarCharValue);
+        .then((getQueryResultsOutput: GetQueryResultsOutput) => {
+            const value = parseFloat(getQueryResultsOutput.ResultSet.Rows[1].Data[0].VarCharValue);
 
-                if (value) resolve(value);
-                else reject(`Missing result in query output: ${JSON.stringify(getQueryResultsOutput)}`)
-            })
-        )
+            if (value) return value;
+            else {
+                //This will happen if there are no results for this particular query
+                console.log(`No results for query: ${JSON.stringify(getQueryResultsOutput)}`)
+                return 0
+            }
+        })
 }
 
 function updateTicker(tickerBucket: string, value: number): Promise<ManagedUpload.SendData> {
