@@ -52,13 +52,14 @@ Parameters:
     Type: String
 
 Resources:
-  Lambda:
+
+  QueryLambda:
     Type: AWS::Serverless::Function
     Properties:
       FunctionName: !Sub contributions-ticker-query-lambda-${Stage}
       Description: Queries Athena for total amounts contributed during a campaign
       Runtime: nodejs8.10
-      Handler: lambda.handler
+      Handler: query-lambda/query-lambda.handler
       MemorySize: 128
       Timeout: 300
       Environment:
@@ -92,10 +93,97 @@ Resources:
             Resource:
               - !Sub "arn:aws:s3::*:${AthenaOutputBucket}/*"
               - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
+
+  CalculateLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub contributions-ticker-calculate-lambda-${Stage}
+      Description: Gets the results of the Athena queries and updates the public ticker file
+      Runtime: nodejs8.10
+      Handler: calculate-lambda/calculate-lambda.handler
+      MemorySize: 128
+      Timeout: 300
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          AcquisitionEventsBucket: !Ref AcquisitionEventsBucket
+          AthenaOutputBucket: !Ref AthenaOutputBucket
+          SchemaName: !Ref SchemaName
+          InitialAmount: !Ref InitialAmount
+          CountryCodes: !Ref CountryCodes
+          TickerBucket: !Ref TickerBucket
+          StartDateTime: !Ref StartDateTime
+          EndDateTime: !Ref EndDateTime
+      CodeUri:
+        Bucket: !Ref DeployBucket
+        Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AmazonAthenaFullAccess
         - Statement:
             Effect: Allow
             Action:
               - s3:*
             Resource:
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}/*"
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
               - !Sub "arn:aws:s3::*:${TickerBucket}/*"
               - !Sub "arn:aws:s3::*:${TickerBucket}"
+
+  StateMachineExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Principal:
+            Service: !Sub states.${AWS::Region}.amazonaws.com
+          Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+      - PolicyName: StatesExecutionPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+            - lambda:InvokeFunction
+            Resource: "*"
+
+  StateMachine:
+    Type: "AWS::StepFunctions::StateMachine"
+    DependsOn:
+      - QueryLambda
+      - CalculateLambda
+    Properties:
+      StateMachineName:
+        !Sub ${App}-${Stage}
+      DefinitionString:
+        !Sub
+          - |
+            {
+              "Comment": "contributions-ticker-calculator",
+              "StartAt": "Query",
+              "States": {
+                "Query": {
+                  "Type": "Task",
+                  "Resource": "${QueryLambdaArn}",
+                  "Next": "Calculate"
+                },
+                "Calculate": {
+                  "Type": "Task",
+                  "Resource": "${CalculateLambdaArn}",
+                  "End": true,
+                  "Retry": [{
+                    "ErrorEquals": ["QueryPendingError"],
+                    "IntervalSeconds": 5,
+                    "MaxAttempts": 5
+                  }]
+                }
+              }
+            }
+          -
+            QueryLambdaArn: !GetAtt QueryLambda.Arn
+            CalculateLambdaArn: !GetAtt CalculateLambda.Arn
+      RoleArn: !GetAtt StateMachineExecutionRole.Arn
