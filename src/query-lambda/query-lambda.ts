@@ -18,7 +18,7 @@ export async function handler(): Promise<string[]> {
 
     console.log(`Getting total for period ${config.StartDateTime}-${config.EndDateTime} and country codes ${config.CountryCodesString}`);
 
-    const queries = getQueries(startDateTime, endDateTime, config.CountryCodesString);
+    const queries = getQueries(startDateTime, endDateTime, config.CountryCodesString, config.Stage);
 
     return Promise.all(queries.map(executeQuery))
         .then((results: StartQueryExecutionOutput[]) => results.map(result => result.QueryExecutionId))

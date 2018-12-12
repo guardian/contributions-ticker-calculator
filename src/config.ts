@@ -1,4 +1,6 @@
 export class Config {
+    Stage: string = process.env.Stage;
+
     StartDateTime: string = process.env.StartDateTime;
     EndDateTime: string = process.env.EndDateTime;
 
