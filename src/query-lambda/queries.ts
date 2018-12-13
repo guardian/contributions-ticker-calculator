@@ -13,37 +13,37 @@ export class Query {
 const oneOffAndAnnualQuery = (startDateTime: Moment, countryCodesString: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE countrycode in (${countryCodesString}) ` +
+        `WHERE country_code in (${countryCodesString}) ` +
         `AND timestamp > CAST('${startDateTime.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
-        `AND paymentfrequency IN ('OneOff', 'Annual')`,
+        `AND payment_frequency IN ('OneOff', 'Annual')`,
     'acquisition_events_oneOffAndAnnual'
 );
 
 const fullMonthlyQuery = (startDateTime: Moment, countryCodesString: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE countrycode in (${countryCodesString}) ` +
+        `WHERE country_code in (${countryCodesString}) ` +
         `AND timestamp > CAST('${startDateTime.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
-        `AND paymentfrequency='Monthly'`,
+        `AND payment_frequency='Monthly'`,
     'acquisition_events_fullMonthlyQuery'
 );
 
 const firstMonthlyQuery = (startDateTime: Moment, oneMonthBeforeEnd: Moment, countryCodesString: string, tableName: string) => new Query(
     'SELECT SUM(amount)*2 ' +
         `FROM ${tableName} ` +
-        `WHERE countrycode in (${countryCodesString}) ` +
+        `WHERE country_code in (${countryCodesString}) ` +
         `AND timestamp > CAST('${startDateTime.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
         `AND timestamp < CAST('${oneMonthBeforeEnd.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
-        `AND paymentfrequency='Monthly'`,
+        `AND payment_frequency='Monthly'`,
     'acquisition_events_firstMonthlyQuery'
 );
 
 const secondMonthlyQuery = (endDateTime: Moment, oneMonthBeforeEnd: Moment, countryCodesString: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE countrycode in (${countryCodesString}) ` +
+        `WHERE country_code in (${countryCodesString}) ` +
         `AND timestamp >= CAST('${oneMonthBeforeEnd.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
-        `AND paymentfrequency='Monthly'`,
+        `AND payment_frequency='Monthly'`,
     'acquisition_events_secondMonthlyQuery'
 );
 
