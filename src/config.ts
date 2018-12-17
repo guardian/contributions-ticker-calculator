@@ -8,6 +8,7 @@ export class Config {
     CountryCodesString: string = process.env.CountryCodes;
 
     InitialAmount: number = parseInt(process.env.InitialAmount);
+    GoalAmount: number = parseInt(process.env.GoalAmount);
 
     AthenaOutputBucket: string = process.env.AthenaOutputBucket;
     TickerBucket: string = process.env.TickerBucket;

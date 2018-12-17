@@ -50,10 +50,15 @@ function getExecutionResult(executionId: string): Promise<number> {
 }
 
 function updateTicker(tickerBucket: string, value: number): Promise<ManagedUpload.SendData> {
+    const data = {
+        total: value,
+        goal: config.GoalAmount
+    };
+
     return s3.upload({
         Bucket: tickerBucket,
         Key: 'ticker.txt',
-        Body: value.toString(),
+        Body: JSON.stringify(data),
         ACL: 'public-read'
     }).promise();
 }
