@@ -105,6 +105,7 @@ Resources:
       Timeout: 300
       Environment:
         Variables:
+          Stage: !Ref Stage
           InitialAmount: !Ref InitialAmount
           GoalAmount: !Ref GoalAmount
           TickerBucket: !Ref TickerBucket

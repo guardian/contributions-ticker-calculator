@@ -4,6 +4,8 @@ import {GetQueryExecutionOutput, GetQueryResultsOutput, QueryExecutionState} fro
 import {QueryFailedError, QueryPendingError} from "./errors";
 
 class Config {
+    Stage: string = process.env.Stage;
+
     InitialAmount: number = parseInt(process.env.InitialAmount);
     GoalAmount: number = parseInt(process.env.GoalAmount);
 
@@ -64,7 +66,7 @@ function updateTicker(tickerBucket: string, value: number): Promise<ManagedUploa
 
     return s3.upload({
         Bucket: tickerBucket,
-        Key: 'ticker.txt',
+        Key: `${config.Stage}/ticker.txt`,
         Body: JSON.stringify(data),
         ACL: 'public-read'
     }).promise();
