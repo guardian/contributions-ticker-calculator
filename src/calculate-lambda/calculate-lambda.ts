@@ -1,7 +1,14 @@
-import {Config} from "../config";
+
 import {ManagedUpload} from "aws-sdk/lib/s3/managed_upload";
 import {GetQueryExecutionOutput, GetQueryResultsOutput, QueryExecutionState} from "aws-sdk/clients/athena";
 import {QueryFailedError, QueryPendingError} from "./errors";
+
+class Config {
+    InitialAmount: number = parseInt(process.env.InitialAmount);
+    GoalAmount: number = parseInt(process.env.GoalAmount);
+
+    TickerBucket: string = process.env.TickerBucket;
+}
 
 const AWS = require('aws-sdk');
 const config = new Config();
@@ -50,10 +57,15 @@ function getExecutionResult(executionId: string): Promise<number> {
 }
 
 function updateTicker(tickerBucket: string, value: number): Promise<ManagedUpload.SendData> {
+    const data = {
+        total: value,
+        goal: config.GoalAmount
+    };
+
     return s3.upload({
         Bucket: tickerBucket,
         Key: 'ticker.txt',
-        Body: value.toString(),
+        Body: JSON.stringify(data),
         ACL: 'public-read'
     }).promise();
 }

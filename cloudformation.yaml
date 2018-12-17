@@ -37,6 +37,9 @@ Parameters:
     Description: Amount to add to the result of the query
     Type: Number
     Default: 0
+  GoalAmount:
+    Description: The campaign goal amount
+    Type: Number
   CountryCodes:
     Description: Comma-separated, quoted list of country codes, e.g. 'US,AU'. Note - cannot use CommaDelimitedList type if passing into environment variables
     Type: String
@@ -65,12 +68,9 @@ Resources:
       Environment:
         Variables:
           Stage: !Ref Stage
-          AcquisitionEventsBucket: !Ref AcquisitionEventsBucket
           AthenaOutputBucket: !Ref AthenaOutputBucket
           SchemaName: !Ref SchemaName
-          InitialAmount: !Ref InitialAmount
           CountryCodes: !Ref CountryCodes
-          TickerBucket: !Ref TickerBucket
           StartDateTime: !Ref StartDateTime
           EndDateTime: !Ref EndDateTime
       CodeUri:
@@ -105,15 +105,9 @@ Resources:
       Timeout: 300
       Environment:
         Variables:
-          Stage: !Ref Stage
-          AcquisitionEventsBucket: !Ref AcquisitionEventsBucket
-          AthenaOutputBucket: !Ref AthenaOutputBucket
-          SchemaName: !Ref SchemaName
           InitialAmount: !Ref InitialAmount
-          CountryCodes: !Ref CountryCodes
+          GoalAmount: !Ref GoalAmount
           TickerBucket: !Ref TickerBucket
-          StartDateTime: !Ref StartDateTime
-          EndDateTime: !Ref EndDateTime
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
