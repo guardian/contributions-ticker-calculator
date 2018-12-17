@@ -1,8 +1,21 @@
-import {Config} from '../config';
 import {StartQueryExecutionInput, StartQueryExecutionOutput} from "aws-sdk/clients/athena";
 import moment = require("moment");
 import {Moment} from "moment";
 import {getQueries, Query} from "./queries";
+
+class Config {
+    Stage: string = process.env.Stage;
+
+    StartDateTime: string = process.env.StartDateTime;
+    EndDateTime: string = process.env.EndDateTime;
+
+    //A quoted, comma-separated list as a string, e.g. 'US','AU'
+    CountryCodesString: string = process.env.CountryCodes;
+
+    AthenaOutputBucket: string = process.env.AthenaOutputBucket;
+
+    SchemaName: string = process.env.SchemaName;
+}
 
 const AWS = require('aws-sdk');
 const config = new Config();

@@ -68,13 +68,9 @@ Resources:
       Environment:
         Variables:
           Stage: !Ref Stage
-          AcquisitionEventsBucket: !Ref AcquisitionEventsBucket
           AthenaOutputBucket: !Ref AthenaOutputBucket
           SchemaName: !Ref SchemaName
-          InitialAmount: !Ref InitialAmount
-          GoalAmount: !Ref GoalAmount
           CountryCodes: !Ref CountryCodes
-          TickerBucket: !Ref TickerBucket
           StartDateTime: !Ref StartDateTime
           EndDateTime: !Ref EndDateTime
       CodeUri:
@@ -109,16 +105,9 @@ Resources:
       Timeout: 300
       Environment:
         Variables:
-          Stage: !Ref Stage
-          AcquisitionEventsBucket: !Ref AcquisitionEventsBucket
-          AthenaOutputBucket: !Ref AthenaOutputBucket
-          SchemaName: !Ref SchemaName
           InitialAmount: !Ref InitialAmount
           GoalAmount: !Ref GoalAmount
-          CountryCodes: !Ref CountryCodes
           TickerBucket: !Ref TickerBucket
-          StartDateTime: !Ref StartDateTime
-          EndDateTime: !Ref EndDateTime
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
