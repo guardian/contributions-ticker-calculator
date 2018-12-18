@@ -57,6 +57,13 @@ Parameters:
     Description: Cron expression for scheduling the step functions
     Type: String
     Default: 0/15 * * * ? *
+  ScheduleState:
+    Description: The state of the schedule
+    Type: String
+    Default: ENABLED
+    AllowedValues:
+      - ENABLED
+      - DISABLED
 
 Resources:
 
@@ -214,7 +221,7 @@ Resources:
     Properties:
       Name: !Sub contributions-ticker-calculator-schedule-${Stage}
       ScheduleExpression: !Sub cron(${CronExpression})
-      State: ENABLED
+      State: !Ref ScheduleState
       Targets:
         - Arn: !Ref StateMachine
           RoleArn: !GetAtt TriggerExecutionRole.Arn
