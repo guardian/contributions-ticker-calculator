@@ -10,6 +10,15 @@ export class Query {
     }
 }
 
+const fullQuery = (startDateTime: Moment, countryCodesString: string, tableName: string) => new Query(
+    'SELECT SUM(amount) ' +
+        `FROM ${tableName} ` +
+        `WHERE country_code in (${countryCodesString}) ` +
+        `AND timestamp > CAST('${startDateTime.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
+        `AND payment_frequency IN ('OneOff', 'Annual', 'Monthly')`,
+    'acquisition_events_oneOffAndAnnual'
+);
+
 const oneOffAndAnnualQuery = (startDateTime: Moment, countryCodesString: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
@@ -17,15 +26,6 @@ const oneOffAndAnnualQuery = (startDateTime: Moment, countryCodesString: string,
         `AND timestamp > CAST('${startDateTime.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
         `AND payment_frequency IN ('OneOff', 'Annual')`,
     'acquisition_events_oneOffAndAnnual'
-);
-
-const fullMonthlyQuery = (startDateTime: Moment, countryCodesString: string, tableName: string) => new Query(
-    'SELECT SUM(amount) ' +
-        `FROM ${tableName} ` +
-        `WHERE country_code in (${countryCodesString}) ` +
-        `AND timestamp > CAST('${startDateTime.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
-        `AND payment_frequency='Monthly'`,
-    'acquisition_events_fullMonthlyQuery'
 );
 
 const firstMonthlyQuery = (startDateTime: Moment, oneMonthBeforeEnd: Moment, countryCodesString: string, tableName: string) => new Query(
@@ -60,8 +60,5 @@ export function getQueries(startDateTime: Moment, endDateTime: Moment, countryCo
         firstMonthlyQuery(startDateTime, oneMonthBeforeEnd, countryCodesString, tableName),
         secondMonthlyQuery(endDateTime, oneMonthBeforeEnd, countryCodesString, tableName)
     ];
-    else return [
-        oneOffAndAnnualQuery(startDateTime, countryCodesString, tableName),
-        fullMonthlyQuery(startDateTime, countryCodesString, tableName)
-    ];
+    else return [fullQuery(startDateTime, countryCodesString, tableName)];
 }
