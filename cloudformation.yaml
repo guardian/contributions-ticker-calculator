@@ -53,6 +53,17 @@ Parameters:
   EndDateTime:
     Description: The end of the campaign, e.g. 2018-02-01
     Type: String
+  CronExpression:
+    Description: Cron expression for scheduling the step functions
+    Type: String
+    Default: 0/15 * * * ? *
+  ScheduleState:
+    Description: The state of the schedule
+    Type: String
+    Default: ENABLED
+    AllowedValues:
+      - ENABLED
+      - DISABLED
 
 Resources:
 
@@ -182,3 +193,36 @@ Resources:
             QueryLambdaArn: !GetAtt QueryLambda.Arn
             CalculateLambdaArn: !GetAtt CalculateLambda.Arn
       RoleArn: !GetAtt StateMachineExecutionRole.Arn
+
+  TriggerExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service:
+            - events.amazonaws.com
+          Action: sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: StatesExecutionPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+            - states:StartExecution
+            Resource: !Ref StateMachine
+
+  Schedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub contributions-ticker-calculator-schedule-${Stage}
+      ScheduleExpression: !Sub cron(${CronExpression})
+      State: !Ref ScheduleState
+      Targets:
+        - Arn: !Ref StateMachine
+          RoleArn: !GetAtt TriggerExecutionRole.Arn
+          Id: !GetAtt StateMachine.Name
