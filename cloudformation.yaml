@@ -47,10 +47,10 @@ Parameters:
     Description: Bucket to output the result to
     Type: String
     Default: contributions-ticker
-  StartDateTime:
+  StartDate:
     Description: The start of the campaign, e.g. 2018-01-01
     Type: String
-  EndDateTime:
+  EndDate:
     Description: The end of the campaign, e.g. 2018-02-01
     Type: String
   CronExpression:
@@ -82,8 +82,8 @@ Resources:
           AthenaOutputBucket: !Ref AthenaOutputBucket
           SchemaName: !Ref SchemaName
           CountryCodes: !Ref CountryCodes
-          StartDateTime: !Ref StartDateTime
-          EndDateTime: !Ref EndDateTime
+          StartDate: !Ref StartDate
+          EndDate: !Ref EndDate
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
