@@ -18,7 +18,7 @@ const fullQuery = (startDate: Moment, countryCodesString: string, tableName: str
         `WHERE country_code in (${countryCodesString}) ` +
         `AND timestamp > CAST('${startDate.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
         `AND payment_frequency IN ('OneOff', 'Annual', 'Monthly')`,
-    'acquisition_events_oneOffAndAnnual'
+    'acquisition_events_full'
 );
 
 const oneOffAndAnnualQuery = (startDate: Moment, countryCodesString: string, tableName: string) => new Query(
