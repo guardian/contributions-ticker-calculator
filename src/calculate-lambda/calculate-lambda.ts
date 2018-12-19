@@ -68,6 +68,7 @@ function updateTicker(tickerBucket: string, value: number): Promise<ManagedUploa
         Bucket: tickerBucket,
         Key: `${config.Stage}/ticker.json`,
         Body: JSON.stringify(data),
-        ACL: 'public-read'
+        ACL: 'public-read',
+        CacheControl: 'max-age=300'
     }).promise();
 }
