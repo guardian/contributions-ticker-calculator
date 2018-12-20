@@ -65,7 +65,7 @@ Parameters:
       - ENABLED
       - DISABLED
   SNSTopicForAlerts:
-    Description: SNS topic for alerts
+    Description: Name of the SNS topic for alerts
     Type: String
 
 Resources:
