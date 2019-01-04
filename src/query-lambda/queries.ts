@@ -16,8 +16,7 @@ const fullQuery = (startDate: Moment, countryCodesString: string, tableName: str
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
         `WHERE country_code in (${countryCodesString}) ` +
-        `AND timestamp > CAST('${startDate.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
-        `AND payment_frequency IN ('OneOff', 'Annually', 'Monthly')`,
+        `AND timestamp > CAST('${startDate.format('YYYY-MM-DD')}' AS TIMESTAMP) `,
     'acquisition_events_full'
 );
 
