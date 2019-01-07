@@ -40,8 +40,11 @@ Parameters:
   GoalAmount:
     Description: The campaign goal amount
     Type: Number
-  CountryCodes:
-    Description: Comma-separated, quoted list of country codes, e.g. 'US,AU'. Note - cannot use CommaDelimitedList type if passing into environment variables
+  CountryCode:
+    Description: Country code to filter by
+    Type: String
+  Currency:
+    Description: Currency to filter by
     Type: String
   TickerBucket:
     Description: Bucket to output the result to
@@ -84,7 +87,8 @@ Resources:
           Stage: !Ref Stage
           AthenaOutputBucket: !Ref AthenaOutputBucket
           SchemaName: !Ref SchemaName
-          CountryCodes: !Ref CountryCodes
+          CountryCode: !Ref CountryCode
+          Currency: !Ref Currency
           StartDate: !Ref StartDate
           EndDate: !Ref EndDate
       CodeUri:

@@ -9,8 +9,8 @@ class Config {
     StartDate: string = process.env.StartDate;
     EndDate: string = process.env.EndDate;
 
-    //A quoted, comma-separated list as a string, e.g. 'US','AU'
-    CountryCodesString: string = process.env.CountryCodes;
+    CountryCode: string = process.env.CountryCode;
+    Currency: string = process.env.Currency;
 
     AthenaOutputBucket: string = process.env.AthenaOutputBucket;
 
@@ -29,9 +29,9 @@ export async function handler(): Promise<string[]> {
     const StartDate: Moment = moment(config.StartDate);
     const EndDate: Moment = moment(config.EndDate);
 
-    console.log(`Getting total for period ${config.StartDate}-${config.EndDate} and country codes ${config.CountryCodesString}`);
+    console.log(`Getting total for period ${config.StartDate}-${config.EndDate} with country code ${config.CountryCode} and currency ${config.Currency}`);
 
-    const queries = getQueries(StartDate, EndDate, config.CountryCodesString, config.Stage);
+    const queries = getQueries(StartDate, EndDate, config.CountryCode, config.Currency, config.Stage);
 
     return Promise.all(queries.map(executeQuery))
         .then((results: StartQueryExecutionOutput[]) => results.map(result => result.QueryExecutionId))
