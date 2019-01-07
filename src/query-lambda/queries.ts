@@ -15,8 +15,8 @@ const formatDateTime = (dt: Moment) => dt.format('YYYY-MM-DD');
 const fullQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE country_code = ${countryCode} ` +
-        `AND currency = ${currency} ` +
+        `WHERE country_code = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
         `AND timestamp > CAST('${formatDateTime(startDate)}' AS TIMESTAMP) `,
     'acquisition_events_full'
 );
@@ -24,8 +24,8 @@ const fullQuery = (startDate: Moment, countryCode: string, currency: string, tab
 const oneOffAndAnnuallyQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE country_code = ${countryCode} ` +
-        `AND currency = ${currency} ` +
+        `WHERE country_code = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
         `AND timestamp > CAST('${formatDateTime(startDate)}' AS TIMESTAMP) ` +
         `AND payment_frequency IN ('OneOff', 'Annually')`,
     'acquisition_events_oneOffAndAnnually'
@@ -34,8 +34,8 @@ const oneOffAndAnnuallyQuery = (startDate: Moment, countryCode: string, currency
 const firstMonthlyQuery = (startDate: Moment, oneMonthBeforeEnd: Moment, countryCode: string, currency: string, tableName: string) => new Query(
     'SELECT SUM(amount)*2 ' +
         `FROM ${tableName} ` +
-        `WHERE country_code = ${countryCode} ` +
-        `AND currency = ${currency} ` +
+        `WHERE country_code = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
         `AND timestamp > CAST('${formatDateTime(startDate)}' AS TIMESTAMP) ` +
         `AND timestamp < CAST('${formatDateTime(oneMonthBeforeEnd)}' AS TIMESTAMP) ` +
         `AND payment_frequency='Monthly'`,
@@ -45,8 +45,8 @@ const firstMonthlyQuery = (startDate: Moment, oneMonthBeforeEnd: Moment, country
 const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryCode: string, currency: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE country_code = ${countryCode} ` +
-        `AND currency = ${currency} ` +
+        `WHERE country_code = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
         `AND timestamp >= CAST('${formatDateTime(oneMonthBeforeEnd)}' AS TIMESTAMP) ` +
         `AND payment_frequency='Monthly'`,
     'acquisition_events_secondMonthlyQuery'
