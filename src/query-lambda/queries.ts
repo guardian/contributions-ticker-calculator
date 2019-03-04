@@ -10,40 +10,44 @@ export class Query {
     }
 }
 
-const formatDateTime = (dt: Moment) => dt.format('YYYY-MM-DD ')
+const formatDateTime = (dt: Moment) => dt.format('YYYY-MM-DD');
 
-const fullQuery = (startDate: Moment, countryCodesString: string, tableName: string) => new Query(
+const fullQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE country_code in (${countryCodesString}) ` +
-        `AND timestamp > CAST('${startDate.format('YYYY-MM-DD')}' AS TIMESTAMP) `,
+        `WHERE country_code = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
+        `AND timestamp > CAST('${formatDateTime(startDate)}' AS TIMESTAMP) `,
     'acquisition_events_full'
 );
 
-const oneOffAndAnnuallyQuery = (startDate: Moment, countryCodesString: string, tableName: string) => new Query(
+const oneOffAndAnnuallyQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE country_code in (${countryCodesString}) ` +
-        `AND timestamp > CAST('${startDate.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
+        `WHERE country_code = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
+        `AND timestamp > CAST('${formatDateTime(startDate)}' AS TIMESTAMP) ` +
         `AND payment_frequency IN ('OneOff', 'Annually')`,
     'acquisition_events_oneOffAndAnnually'
 );
 
-const firstMonthlyQuery = (startDate: Moment, oneMonthBeforeEnd: Moment, countryCodesString: string, tableName: string) => new Query(
+const firstMonthlyQuery = (startDate: Moment, oneMonthBeforeEnd: Moment, countryCode: string, currency: string, tableName: string) => new Query(
     'SELECT SUM(amount)*2 ' +
         `FROM ${tableName} ` +
-        `WHERE country_code in (${countryCodesString}) ` +
-        `AND timestamp > CAST('${startDate.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
-        `AND timestamp < CAST('${oneMonthBeforeEnd.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
+        `WHERE country_code = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
+        `AND timestamp > CAST('${formatDateTime(startDate)}' AS TIMESTAMP) ` +
+        `AND timestamp < CAST('${formatDateTime(oneMonthBeforeEnd)}' AS TIMESTAMP) ` +
         `AND payment_frequency='Monthly'`,
     'acquisition_events_firstMonthlyQuery'
 );
 
-const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryCodesString: string, tableName: string) => new Query(
+const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryCode: string, currency: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE country_code in (${countryCodesString}) ` +
-        `AND timestamp >= CAST('${oneMonthBeforeEnd.format('YYYY-MM-DD')}' AS TIMESTAMP) ` +
+        `WHERE country_code = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
+        `AND timestamp >= CAST('${formatDateTime(oneMonthBeforeEnd)}' AS TIMESTAMP) ` +
         `AND payment_frequency='Monthly'`,
     'acquisition_events_secondMonthlyQuery'
 );
@@ -52,14 +56,14 @@ const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryC
  * If a campaign runs for more than a month then double any monthly contributions received before the final month.
  * This logic assumes campaigns will not run for more than 2 months.
  */
-export function getQueries(startDate: Moment, endDate: Moment, countryCodesString: string, stage: string): Query[] {
+export function getQueries(startDate: Moment, endDate: Moment, countryCode: string, currency: string, stage: string): Query[] {
     const oneMonthBeforeEnd = endDate.clone().subtract(1, 'month');
     const tableName = `acquisition_events_${stage.toLowerCase()}`;
 
     if (oneMonthBeforeEnd.isAfter(startDate)) return [
-        oneOffAndAnnuallyQuery(startDate, countryCodesString, tableName),
-        firstMonthlyQuery(startDate, oneMonthBeforeEnd, countryCodesString, tableName),
-        secondMonthlyQuery(endDate, oneMonthBeforeEnd, countryCodesString, tableName)
+        oneOffAndAnnuallyQuery(startDate, countryCode, currency, tableName),
+        firstMonthlyQuery(startDate, oneMonthBeforeEnd, countryCode, currency, tableName),
+        secondMonthlyQuery(endDate, oneMonthBeforeEnd, countryCode, currency, tableName)
     ];
-    else return [fullQuery(startDate, countryCodesString, tableName)];
+    else return [fullQuery(startDate, countryCode, currency, tableName)];
 }
