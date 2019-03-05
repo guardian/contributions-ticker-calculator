@@ -12,12 +12,15 @@ export class Query {
 
 const formatDateTime = (dt: Moment) => dt.format('YYYY-MM-DD');
 
+// IMPORTANT - always use this field in the queries - it is the partition field
+const partitionDateField = 'acquisition_date';
+
 const fullQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
         `WHERE country_code = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
-        `AND timestamp > CAST('${formatDateTime(startDate)}' AS TIMESTAMP) `,
+        `AND ${partitionDateField} > date'${formatDateTime(startDate)}' `,
     'acquisition_events_full'
 );
 
@@ -26,7 +29,7 @@ const oneOffAndAnnuallyQuery = (startDate: Moment, countryCode: string, currency
         `FROM ${tableName} ` +
         `WHERE country_code = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
-        `AND timestamp > CAST('${formatDateTime(startDate)}' AS TIMESTAMP) ` +
+        `AND ${partitionDateField} > date'${formatDateTime(startDate)}' ` +
         `AND payment_frequency IN ('OneOff', 'Annually')`,
     'acquisition_events_oneOffAndAnnually'
 );
@@ -36,8 +39,8 @@ const firstMonthlyQuery = (startDate: Moment, oneMonthBeforeEnd: Moment, country
         `FROM ${tableName} ` +
         `WHERE country_code = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
-        `AND timestamp > CAST('${formatDateTime(startDate)}' AS TIMESTAMP) ` +
-        `AND timestamp < CAST('${formatDateTime(oneMonthBeforeEnd)}' AS TIMESTAMP) ` +
+        `AND ${partitionDateField} > date'${formatDateTime(startDate)}' ` +
+        `AND ${partitionDateField} < date'${formatDateTime(oneMonthBeforeEnd)}' ` +
         `AND payment_frequency='Monthly'`,
     'acquisition_events_firstMonthlyQuery'
 );
@@ -47,7 +50,7 @@ const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryC
         `FROM ${tableName} ` +
         `WHERE country_code = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
-        `AND timestamp >= CAST('${formatDateTime(oneMonthBeforeEnd)}' AS TIMESTAMP) ` +
+        `AND ${partitionDateField} >= date'${formatDateTime(oneMonthBeforeEnd)}' ` +
         `AND payment_frequency='Monthly'`,
     'acquisition_events_secondMonthlyQuery'
 );
