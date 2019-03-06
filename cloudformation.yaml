@@ -71,6 +71,9 @@ Parameters:
     Description: Name of the SNS topic for alerts
     Type: String
 
+Conditions:
+  IsProd: !Equals [!Ref "Stage", "PROD"]
+
 Resources:
 
   QueryLambda:
@@ -236,6 +239,7 @@ Resources:
 
   ExecutionFailureAlarm:
     Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
     Properties:
       AlarmActions:
       - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${SNSTopicForAlerts}
