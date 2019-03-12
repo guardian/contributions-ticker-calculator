@@ -11,6 +11,7 @@ class Config {
 
     CountryCode: string = process.env.CountryCode;
     Currency: string = process.env.Currency;
+    CampaignCode: string = process.env.CampaignCode;
 
     AthenaOutputBucket: string = process.env.AthenaOutputBucket;
 
@@ -31,7 +32,7 @@ export async function handler(): Promise<string[]> {
 
     console.log(`Getting total for period ${config.StartDate}-${config.EndDate} with country code ${config.CountryCode} and currency ${config.Currency}`);
 
-    const queries = getQueries(StartDate, EndDate, config.CountryCode, config.Currency, config.Stage);
+    const queries = getQueries(StartDate, EndDate, config.CountryCode, config.Currency, config.Stage, config.CampaignCode);
 
     return Promise.all(queries.map(executeQuery))
         .then((results: StartQueryExecutionOutput[]) => results.map(result => result.QueryExecutionId))
