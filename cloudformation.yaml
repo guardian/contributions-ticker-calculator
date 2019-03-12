@@ -46,6 +46,9 @@ Parameters:
   Currency:
     Description: Currency to filter by
     Type: String
+  ComponentId:
+    Description: Component Id to filter on
+    Type: String
   TickerBucket:
     Description: Bucket to output the result to
     Type: String
