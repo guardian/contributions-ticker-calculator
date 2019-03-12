@@ -20,7 +20,7 @@ const fullQuery = (startDate: Moment, countryCode: string, currency: string, tab
         `FROM ${tableName} ` +
         `WHERE country_code = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
-        campaignCode ? `AND campaignCode = '${campaignCode}' ` : '' +
+        (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' `,
     'acquisition_events_full'
 );
@@ -30,7 +30,7 @@ const oneOffAndAnnuallyQuery = (startDate: Moment, countryCode: string, currency
         `FROM ${tableName} ` +
         `WHERE country_code = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
-        campaignCode ? `AND campaignCode = '${campaignCode}' ` : '' +
+        (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
         `AND payment_frequency IN ('OneOff', 'Annually')`,
     'acquisition_events_oneOffAndAnnually'
@@ -41,7 +41,7 @@ const firstMonthlyQuery = (startDate: Moment, oneMonthBeforeEnd: Moment, country
         `FROM ${tableName} ` +
         `WHERE country_code = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
-        campaignCode ? `AND campaignCode = '${campaignCode}' ` : '' +
+        (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
         `AND ${partitionDateField} < date'${formatDateTime(oneMonthBeforeEnd)}' ` +
         `AND payment_frequency='Monthly'`,
@@ -53,7 +53,7 @@ const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryC
         `FROM ${tableName} ` +
         `WHERE country_code = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
-        campaignCode ? `AND campaignCode = '${campaignCode}' ` : '' +
+        (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(oneMonthBeforeEnd)}' ` +
         `AND payment_frequency='Monthly'`,
     'acquisition_events_secondMonthlyQuery'
