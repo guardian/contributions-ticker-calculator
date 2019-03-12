@@ -46,8 +46,8 @@ Parameters:
   Currency:
     Description: Currency to filter by
     Type: String
-  ComponentId:
-    Description: Component Id to filter on
+  CampaignId:
+    Description: Campaign Id to filter on
     Type: String
   TickerBucket:
     Description: Bucket to output the result to
@@ -94,6 +94,7 @@ Resources:
           AthenaOutputBucket: !Ref AthenaOutputBucket
           SchemaName: !Ref SchemaName
           CountryCode: !Ref CountryCode
+          CampaignId: !Ref CampaignId
           Currency: !Ref Currency
           StartDate: !Ref StartDate
           EndDate: !Ref EndDate
