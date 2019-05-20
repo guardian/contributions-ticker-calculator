@@ -24,19 +24,3 @@ To switch the cloudwatch schedule on and begin calculating the ticker value, set
 By default it will run every 15 minutes, though this can be configured with the `CronExpression` parameter.
 
 Remember to set `ScheduleState` to `DISABLED` after the campaign ends to avoid unnecessary costs.
-
-
-### Notes
-
-#### Running manually
-Trigger a one-off run from the Step Functions console page (`contributions-ticker-calculator-{STAGE}`).
-
-#### Result file
-The calculated ticker value is output to `{bucket}/{STAGE}/ticker.json`.
-This file is behind fastly in both CODE and PROD.
-
-#### Why only one campaign at a time?
-- It's configured using cloudformation parameters, and we only have one stack,
-- It outputs a single number to a single file in S3.
-
-If we find that we need more than one concurrent ticker then this can be changed.
