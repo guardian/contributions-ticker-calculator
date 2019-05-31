@@ -197,7 +197,7 @@ Resources:
                   "End": true,
                   "Retry": [{
                     "ErrorEquals": ["QueryPendingError"],
-                    "IntervalSeconds": 5,
+                    "IntervalSeconds": 10,
                     "MaxAttempts": 5
                   }]
                 }
