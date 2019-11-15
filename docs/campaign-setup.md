@@ -8,6 +8,15 @@ You can generate the SQL for creating the partitions using [this script](https:/
 
 Create a partition for each day of the campaign. Any days without a partition will not be included in the calculation.
 
+### Start here (step-by-step instructions for updating the ticker)
+1. Login to AWS through Membership Janus
+2. Navigate to CloudFormation
+3. Search for contributions-ticker-calculator
+4. Select code or prod version
+5. Click the update button
+6. 'Use current template' + click the 'next button'
+7. Update the parameters per below
+
 ### Update the cloudformation parameters of the contributions-ticker-calculator stack
 | Parameter       | Mandatory? |                                                                                       |
 |-----------------|------------|---------------------------------------------------------------------------------------|
