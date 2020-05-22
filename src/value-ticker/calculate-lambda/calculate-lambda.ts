@@ -1,10 +1,9 @@
-
 import {ManagedUpload} from "aws-sdk/lib/s3/managed_upload";
 import {
     GetQueryResultsOutput,
     QueryExecutionId,
 } from "aws-sdk/clients/athena";
-import {QueryReduce, reduceAndWrite} from "../lib/process";
+import {QueryReduce, reduceAndWrite} from "../../lib/process";
 
 class Config {
     Stage: string = process.env.Stage;
