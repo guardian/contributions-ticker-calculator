@@ -1,7 +1,8 @@
-import {StartQueryExecutionInput, StartQueryExecutionOutput} from "aws-sdk/clients/athena";
+import {QueryExecutionId} from "aws-sdk/clients/athena";
 import moment = require("moment");
 import {Moment} from "moment";
-import {getQueries, Query} from "./queries";
+import {getQueries} from "./queries";
+import {executeQueries} from "../lib/query";
 
 class Config {
     Stage: string = process.env.Stage;
@@ -18,14 +19,9 @@ class Config {
     SchemaName: string = process.env.SchemaName;
 }
 
-const AWS = require('aws-sdk');
 const config = new Config();
-const athena = new AWS.Athena({region: 'eu-west-1'});
 
-/**
- * Executes Athena queries and returns the execution IDs
- */
-export async function handler(): Promise<string[]> {
+export async function handler(): Promise<QueryExecutionId[]> {
 
     const StartDate: Moment = moment(config.StartDate);
     const EndDate: Moment = moment(config.EndDate);
@@ -34,21 +30,5 @@ export async function handler(): Promise<string[]> {
 
     const queries = getQueries(StartDate, EndDate, config.CountryCode, config.Currency, config.Stage, config.CampaignCode);
 
-    return Promise.all(queries.map(executeQuery))
-        .then((results: StartQueryExecutionOutput[]) => results.map(result => result.QueryExecutionId))
-}
-
-function executeQuery(query: Query): Promise<StartQueryExecutionOutput> {
-    const params: StartQueryExecutionInput = {
-        QueryString: query.query,
-        ResultConfiguration: {
-            OutputLocation: `s3://${config.AthenaOutputBucket}`,
-        },
-        ClientRequestToken: query.token,
-        QueryExecutionContext: {
-            Database: config.SchemaName
-        }
-    };
-
-    return athena.startQueryExecution(params).promise()
+    return executeQueries(queries, config.AthenaOutputBucket, config.SchemaName);
 }

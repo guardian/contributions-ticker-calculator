@@ -1,14 +1,5 @@
 import {Moment} from "moment";
-
-export class Query {
-    query: string;
-    token: string;
-
-    constructor(q: string, name: string) {
-        this.query = q;
-        this.token = `${name}_${new Date().toISOString()}`;
-    }
-}
+import {Query} from "../lib/query";
 
 const formatDateTime = (dt: Moment) => dt.format('YYYY-MM-DD');
 
