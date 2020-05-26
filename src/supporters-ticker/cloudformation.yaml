@@ -1,0 +1,235 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: 'AWS::Serverless-2016-10-31'
+Description: Calculates total contributors, for use by a ticker
+
+Parameters:
+  Stack:
+    Description: Stack name
+    Type: String
+    Default: support
+  App:
+    Description: Application name
+    Type: String
+    Default: supporter-count-ticker
+  Stage:
+    Description: Stage name
+    Type: String
+    AllowedValues:
+      - CODE
+      - PROD
+  DeployBucket:
+    Description: Bucket to copy files to
+    Type: String
+    Default: membership-dist
+  AthenaOutputBucket:
+    Description: Name of the bucket to output athena query results to
+    Type: String
+    Default: acquisition-events-output
+  SchemaName:
+    Description: The schema name for the query
+    Type: String
+    Default: acquisition
+  ExtraSupporters:
+    Description: Manually entered number to add to the result of the query
+    Type: Number
+    Default: 0
+  GoalAmount:
+    Description: The campaign goal amount
+    Type: Number
+  TickerBucket:
+    Description: Bucket to output the result to
+    Type: String
+    Default: contributions-ticker
+  CronExpression:
+    Description: Cron expression for scheduling the step functions
+    Type: String
+    Default: 00 00 * * ? *
+  ScheduleState:
+    Description: The state of the schedule
+    Type: String
+    Default: ENABLED
+    AllowedValues:
+      - ENABLED
+      - DISABLED
+  SNSTopicForAlerts:
+    Description: Name of the SNS topic for alerts
+    Type: String
+  CrossAccountRole:
+    Description: ARN of the cross-account role for data lake access
+    Type: String
+
+Conditions:
+  IsProd: !Equals [!Ref "Stage", "PROD"]
+
+Resources:
+
+  QueryLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub supporter-count-ticker-query-lambda-${Stage}
+      Description: Queries Athena for total supporters
+      Runtime: nodejs10.x
+      Handler: supporters-ticker/query-lambda/query-lambda.handler
+      MemorySize: 128
+      Timeout: 300
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          AthenaOutputBucket: !Ref AthenaOutputBucket
+          SchemaName: !Ref SchemaName
+      CodeUri:
+        Bucket: !Ref DeployBucket
+        Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AmazonAthenaFullAccess
+        - CrossAccountRole
+        - Statement:
+            Effect: Allow
+            Action:
+              - s3:*
+            Resource:
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}/*"
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
+
+  CalculateLambda:
+    Type: AWS::Serverless::Function
+    Properties:
+      FunctionName: !Sub supporter-count-ticker-calculate-lambda-${Stage}
+      Description: Gets the results of the Athena queries and updates the public ticker file
+      Runtime: nodejs10.x
+      Handler: supporters-ticker/calculate-lambda/calculate-lambda.handler
+      MemorySize: 128
+      Timeout: 300
+      Environment:
+        Variables:
+          Stage: !Ref Stage
+          InitialAmount: !Ref InitialAmount
+          GoalAmount: !Ref GoalAmount
+          TickerBucket: !Ref TickerBucket
+      CodeUri:
+        Bucket: !Ref DeployBucket
+        Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
+      Policies:
+        - AWSLambdaBasicExecutionRole
+        - AmazonAthenaFullAccess
+        - Statement:
+            Effect: Allow
+            Action:
+              - s3:*
+            Resource:
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}/*"
+              - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
+              - !Sub "arn:aws:s3::*:${TickerBucket}/*"
+              - !Sub "arn:aws:s3::*:${TickerBucket}"
+
+  StateMachineExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: "Allow"
+          Principal:
+            Service: !Sub states.${AWS::Region}.amazonaws.com
+          Action: "sts:AssumeRole"
+      Path: "/"
+      Policies:
+      - PolicyName: StatesExecutionPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+            - lambda:InvokeFunction
+            Resource: "*"
+
+  StateMachine:
+    Type: "AWS::StepFunctions::StateMachine"
+    DependsOn:
+      - QueryLambda
+      - CalculateLambda
+    Properties:
+      StateMachineName:
+        !Sub ${App}-${Stage}
+      DefinitionString:
+        !Sub
+          - |
+            {
+              "Comment": "supporter-count-ticker",
+              "StartAt": "Query",
+              "States": {
+                "Query": {
+                  "Type": "Task",
+                  "Resource": "${QueryLambdaArn}",
+                  "Next": "Calculate"
+                },
+                "Calculate": {
+                  "Type": "Task",
+                  "Resource": "${CalculateLambdaArn}",
+                  "End": true,
+                  "Retry": [{
+                    "ErrorEquals": ["QueryPendingError"],
+                    "IntervalSeconds": 10,
+                    "MaxAttempts": 5
+                  }]
+                }
+              }
+            }
+          -
+            QueryLambdaArn: !GetAtt QueryLambda.Arn
+            CalculateLambdaArn: !GetAtt CalculateLambda.Arn
+      RoleArn: !GetAtt StateMachineExecutionRole.Arn
+
+  TriggerExecutionRole:
+    Type: "AWS::IAM::Role"
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          Effect: Allow
+          Principal:
+            Service:
+            - events.amazonaws.com
+          Action: sts:AssumeRole
+      Path: "/"
+      Policies:
+      - PolicyName: StatesExecutionPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+          - Effect: Allow
+            Action:
+            - states:StartExecution
+            Resource: !Ref StateMachine
+
+  Schedule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub supporter-count-ticker-calculator-schedule-${Stage}
+      ScheduleExpression: !Sub cron(${CronExpression})
+      State: !Ref ScheduleState
+      Targets:
+        - Arn: !Ref StateMachine
+          RoleArn: !GetAtt TriggerExecutionRole.Arn
+          Id: !GetAtt StateMachine.Name
+
+  ExecutionFailureAlarm:
+    Type: AWS::CloudWatch::Alarm
+    Condition: IsProd
+    Properties:
+      AlarmActions:
+      - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${SNSTopicForAlerts}
+      AlarmName: !Sub ${App}-failed-${Stage}
+      AlarmDescription: !Sub Supporter ticker calculation failed twice in 30mins for stage ${Stage}
+      MetricName: ExecutionsFailed
+      Namespace: AWS/States
+      Dimensions:
+        - Name: StateMachineArn
+          Value: !Ref StateMachine
+      ComparisonOperator: GreaterThanOrEqualToThreshold
+      Threshold: 2
+      Period: 900
+      EvaluationPeriods: 2
+      Statistic: Sum
+
