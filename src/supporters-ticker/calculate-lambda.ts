@@ -3,7 +3,7 @@ import {
     GetQueryResultsOutput,
     QueryExecutionId,
 } from "aws-sdk/clients/athena";
-import {QueryReduce, reduceAndWrite} from "../../lib/process";
+import {QueryReduce, reduceAndWrite} from "../lib/process";
 
 class Config {
     Stage: string = process.env.Stage;
@@ -21,7 +21,7 @@ export async function handler(executionIds: QueryExecutionId[]): Promise<Managed
         executionIds,
         reduce,
         config.TickerBucket,
-        `${config.Stage}/ticker.json`
+        `${config.Stage}/supporters-ticker.json`
     );
 }
 
@@ -38,7 +38,6 @@ const reduce: QueryReduce = (queryResults: GetQueryResultsOutput[]) => {
 
     const total = amounts.reduce((sum, v) => sum + v) + config.ExtraSupporters;
 
-    // TODO - include breakdown by state
     return {
         total,
         goal: config.GoalAmount

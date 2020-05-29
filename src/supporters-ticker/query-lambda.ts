@@ -1,5 +1,5 @@
 import {QueryExecutionId} from "aws-sdk/clients/athena";
-import {executeQueries, Query} from "../../lib/query";
+import {executeQueries, Query} from "../lib/query";
 
 class Config {
     AthenaOutputBucket: string = process.env.AthenaOutputBucket;
@@ -27,7 +27,6 @@ const singleContributionsQuery =
     "  AND product = 'CONTRIBUTION'";
 
 export async function handler(): Promise<QueryExecutionId[]> {
-    // TODO - query for breakdown by state
     const queries = [
         new Query(subscriptionsQuery, 'aus_supporters__subscriptions'),
         new Query(singleContributionsQuery, 'aus_supporters__single_contributions')
