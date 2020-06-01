@@ -1,9 +1,11 @@
 import {QueryExecutionId} from "aws-sdk/clients/athena";
 import {executeQueries, Query} from "../lib/query";
+import {athenaForRole} from "../lib/athena";
 
 class Config {
     AthenaOutputBucket: string = process.env.AthenaOutputBucket;
     SchemaName: string = process.env.SchemaName;
+    AthenaRole: string = process.env.AthenaRole;
 }
 
 const config = new Config();
@@ -32,5 +34,6 @@ export async function handler(): Promise<QueryExecutionId[]> {
         new Query(singleContributionsQuery, 'aus_supporters__single_contributions')
     ];
 
-    return executeQueries(queries, config.AthenaOutputBucket, config.SchemaName);
+    return athenaForRole(config.AthenaRole, 'ophan')
+        .then(athena => executeQueries(queries, config.AthenaOutputBucket, config.SchemaName, athena));
 }

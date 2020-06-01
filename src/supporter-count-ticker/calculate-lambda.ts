@@ -4,6 +4,7 @@ import {
     QueryExecutionId,
 } from "aws-sdk/clients/athena";
 import {QueryReduce, reduceAndWrite} from "../lib/process";
+import {athenaForRole} from "../lib/athena";
 
 class Config {
     Stage: string = process.env.Stage;
@@ -12,17 +13,21 @@ class Config {
     GoalAmount: number = parseInt(process.env.GoalAmount);
 
     TickerBucket: string = process.env.TickerBucket;
+
+    AthenaRole: string = process.env.AthenaRole;
 }
 
 const config = new Config();
 
 export async function handler(executionIds: QueryExecutionId[]): Promise<ManagedUpload.SendData> {
-    return reduceAndWrite(
-        executionIds,
-        reduce,
-        config.TickerBucket,
-        `${config.Stage}/supporters-ticker.json`
-    );
+    return athenaForRole(config.AthenaRole, 'ophan')
+        .then(athena => reduceAndWrite(
+            executionIds,
+            reduce,
+            config.TickerBucket,
+            `${config.Stage}/supporters-ticker.json`,
+            athena
+        ));
 }
 
 const reduce: QueryReduce = (queryResults: GetQueryResultsOutput[]) => {

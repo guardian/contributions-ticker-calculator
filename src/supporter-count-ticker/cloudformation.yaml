@@ -77,6 +77,7 @@ Resources:
           Stage: !Ref Stage
           AthenaOutputBucket: !Ref AthenaOutputBucket
           SchemaName: !Ref SchemaName
+          AthenaRole: !Ref CrossAccountRole
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
@@ -111,6 +112,7 @@ Resources:
           ExtraSupporters: !Ref ExtraSupporters
           GoalAmount: !Ref GoalAmount
           TickerBucket: !Ref TickerBucket
+          AthenaRole: !Ref CrossAccountRole
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip

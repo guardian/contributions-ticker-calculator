@@ -5,6 +5,9 @@ import {
 } from "aws-sdk/clients/athena";
 import {QueryReduce, reduceAndWrite} from "../../lib/process";
 
+const AWS = require('aws-sdk');
+const athena = new AWS.Athena({region: 'eu-west-1'});
+
 class Config {
     Stage: string = process.env.Stage;
 
@@ -21,7 +24,8 @@ export async function handler(executionIds: QueryExecutionId[]): Promise<Managed
         executionIds,
         reduce,
         config.TickerBucket,
-        `${config.Stage}/ticker.json`
+        `${config.Stage}/ticker.json`,
+        athena
     );
 }
 
