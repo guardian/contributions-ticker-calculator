@@ -7,7 +7,7 @@ export function athenaForRole(roleArn: string, sessionName: string): Promise<Ath
     return sts.assumeRole({
         RoleArn: roleArn,
         RoleSessionName: sessionName
-    }).promise.then(data => {
+    }).promise().then(data => {
         return new AWS.Athena({
             region: 'eu-west-1',
             accessKeyId: data.Credentials.AccessKeyId,
