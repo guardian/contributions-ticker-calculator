@@ -69,7 +69,7 @@ Resources:
       FunctionName: !Sub supporter-count-ticker-query-lambda-${Stage}
       Description: Queries Athena for total supporters
       Runtime: nodejs10.x
-      Handler: supporter-count-ticker/query-lambda/query-lambda.handler
+      Handler: supporter-count-ticker/query-lambda.handler
       MemorySize: 128
       Timeout: 300
       Environment:
@@ -83,7 +83,6 @@ Resources:
       Policies:
         - AWSLambdaBasicExecutionRole
         - AmazonAthenaFullAccess
-        - CrossAccountRole
         - Statement:
             Effect: Allow
             Action:
@@ -91,6 +90,11 @@ Resources:
             Resource:
               - !Sub "arn:aws:s3::*:${AthenaOutputBucket}/*"
               - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
+        - Statement:
+            Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Resource: !Ref CrossAccountRole
 
   CalculateLambda:
     Type: AWS::Serverless::Function
@@ -98,13 +102,13 @@ Resources:
       FunctionName: !Sub supporter-count-ticker-calculate-lambda-${Stage}
       Description: Gets the results of the Athena queries and updates the public ticker file
       Runtime: nodejs10.x
-      Handler: supporter-count-ticker/calculate-lambda/calculate-lambda.handler
+      Handler: supporter-count-ticker/calculate-lambda.handler
       MemorySize: 128
       Timeout: 300
       Environment:
         Variables:
           Stage: !Ref Stage
-          InitialAmount: !Ref InitialAmount
+          ExtraSupporters: !Ref ExtraSupporters
           GoalAmount: !Ref GoalAmount
           TickerBucket: !Ref TickerBucket
       CodeUri:
@@ -122,6 +126,11 @@ Resources:
               - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
               - !Sub "arn:aws:s3::*:${TickerBucket}/*"
               - !Sub "arn:aws:s3::*:${TickerBucket}"
+        - Statement:
+            Effect: Allow
+            Action:
+              - sts:AssumeRole
+            Resource: !Ref CrossAccountRole
 
   StateMachineExecutionRole:
     Type: "AWS::IAM::Role"
