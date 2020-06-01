@@ -9,21 +9,21 @@ class Config {
 const config = new Config();
 
 const subscriptionsQuery =
-    "SELECT\n" +
-    "  COUNT(DISTINCT identity_id)\n" +
-    "  FROM clean.subscriptions\n" +
-    "WHERE\n" +
-    "  sold_to_country = 'Australia'\n" +
-    "  AND status = 'active'\n" +
+    "SELECT" +
+    "  COUNT(DISTINCT identity_id)" +
+    "  FROM clean.subscriptions" +
+    "WHERE" +
+    "  sold_to_country = 'Australia'" +
+    "  AND status = 'active'" +
     "  AND (product_name IN ('Supporter','Partner','Patron','Contributor','Newspaper Delivery','Newspaper Voucher','Digital Pack') or product_name LIKE '%Weekly%')";
 
 const singleContributionsQuery =
-    "SELECT \n" +
-    "  COUNT(DISTINCT browser_id) AS cons\n" +
-    "  FROM clean.acquisitions_no_pageview_data\n" +
-    "WHERE\n" +
-    "  received_date >= DATE '2019-05-01'\n" +
-    "  AND country_code = 'AU'\n" +
+    "SELECT" +
+    "  COUNT(DISTINCT browser_id) AS cons" +
+    "  FROM clean.acquisitions_no_pageview_data" +
+    "WHERE" +
+    "  received_date >= DATE '2019-05-01'" +
+    "  AND country_code = 'AU'" +
     "  AND product = 'CONTRIBUTION'";
 
 export async function handler(): Promise<QueryExecutionId[]> {
