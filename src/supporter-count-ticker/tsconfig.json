@@ -6,7 +6,6 @@
     "sourceMap": true
   },
   "include": [
-    "./*.ts",
-    "../lib/*.ts"
+    "./*.ts"
   ]
 }
