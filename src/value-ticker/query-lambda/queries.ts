@@ -1,5 +1,5 @@
 import {Moment} from "moment";
-import {Query} from "../lib/query";
+import {Query} from "../../lib/query";
 
 const formatDateTime = (dt: Moment) => dt.format('YYYY-MM-DD');
 

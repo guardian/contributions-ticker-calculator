@@ -2,7 +2,7 @@ import {QueryExecutionId} from "aws-sdk/clients/athena";
 import moment = require("moment");
 import {Moment} from "moment";
 import {getQueries} from "./queries";
-import {executeQueries} from "../lib/query";
+import {executeQueries} from "../../lib/query";
 
 const AWS = require('aws-sdk');
 const athena = new AWS.Athena({region: 'eu-west-1'});

@@ -1,4 +1,4 @@
-import { handler } from '../calculate-lambda';
+import { handler } from './calculate-lambda';
 let AWS = require('aws-sdk');
 
 /**
