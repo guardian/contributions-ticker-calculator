@@ -3,10 +3,10 @@
     "target": "esnext",
     "module": "commonjs",
     "outDir": "target",
-    "sourceMap": true,
-    "moduleResolution": "node"
+    "sourceMap": true
   },
   "include": [
+    "./*.ts",
     "./**/*.ts",
     "../lib/*.ts"
   ]
