@@ -4,15 +4,9 @@
     "module": "commonjs",
     "outDir": "target",
     "sourceMap": true,
-    "baseUrl": ".",
-    "paths": {
-      "aws-sdk": [
-        "./node_modules/aws-sdk"
-      ]
-    }
+    "baseUrl": "../"
   },
   "include": [
-    "./**/*.ts",
-    "../lib/*.ts"
+    "./**/*.ts"
   ]
 }
