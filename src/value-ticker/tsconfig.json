@@ -3,10 +3,15 @@
     "target": "esnext",
     "module": "commonjs",
     "outDir": "target",
-    "sourceMap": true
+    "sourceMap": true,
+    "baseUrl": ".",
+    "paths": {
+      "aws-sdk": [
+        "./node_modules/aws-sdk"
+      ]
+    }
   },
   "include": [
-    "./*.ts",
     "./**/*.ts",
     "../lib/*.ts"
   ]
