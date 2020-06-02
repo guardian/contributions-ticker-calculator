@@ -3,7 +3,7 @@ import {
     GetQueryResultsOutput,
     QueryExecutionId,
 } from "aws-sdk/clients/athena";
-import {QueryReduce, reduceAndWrite} from "../../lib/process";
+import {QueryReduce, reduceAndWrite} from "../lib/process";
 
 const AWS = require('aws-sdk');
 const athena = new AWS.Athena({region: 'eu-west-1'});
