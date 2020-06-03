@@ -3,6 +3,10 @@ set -e
 
 npm install -g yarn
 
+# So that we can share the code in lib between sub-projects.
+# TODO - can we do better than this? Does yarn workspaces help?
+cp ../lib/* .
+
 yarn install
 # Will place .js files in target
 yarn run build

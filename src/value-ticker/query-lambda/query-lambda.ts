@@ -4,6 +4,9 @@ import {Moment} from "moment";
 import {getQueries} from "./queries";
 import {executeQueries} from "../../lib/query";
 
+const AWS = require('aws-sdk');
+const athena = new AWS.Athena({region: 'eu-west-1'});
+
 class Config {
     Stage: string = process.env.Stage;
 
@@ -30,5 +33,5 @@ export async function handler(): Promise<QueryExecutionId[]> {
 
     const queries = getQueries(StartDate, EndDate, config.CountryCode, config.Currency, config.Stage, config.CampaignCode);
 
-    return executeQueries(queries, config.AthenaOutputBucket, config.SchemaName);
+    return executeQueries(queries, config.AthenaOutputBucket, config.SchemaName, athena);
 }

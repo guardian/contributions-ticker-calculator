@@ -3,30 +3,31 @@ import {
     GetQueryResultsOutput,
     QueryExecutionId,
 } from "aws-sdk/clients/athena";
-import {QueryReduce, reduceAndWrite} from "../../lib/process";
-
-const AWS = require('aws-sdk');
-const athena = new AWS.Athena({region: 'eu-west-1'});
+import {QueryReduce, reduceAndWrite} from "../lib/process";
+import {athenaForRole} from "../lib/athena";
 
 class Config {
     Stage: string = process.env.Stage;
 
-    InitialAmount: number = parseInt(process.env.InitialAmount);
+    ExtraSupporters: number = parseInt(process.env.ExtraSupporters);
     GoalAmount: number = parseInt(process.env.GoalAmount);
 
     TickerBucket: string = process.env.TickerBucket;
+
+    AthenaRole: string = process.env.AthenaRole;
 }
 
 const config = new Config();
 
 export async function handler(executionIds: QueryExecutionId[]): Promise<ManagedUpload.SendData> {
-    return reduceAndWrite(
-        executionIds,
-        reduce,
-        config.TickerBucket,
-        `${config.Stage}/ticker.json`,
-        athena
-    );
+    return athenaForRole(config.AthenaRole, 'ophan')
+        .then(athena => reduceAndWrite(
+            executionIds,
+            reduce,
+            config.TickerBucket,
+            `${config.Stage}/supporters-ticker.json`,
+            athena
+        ));
 }
 
 const reduce: QueryReduce = (queryResults: GetQueryResultsOutput[]) => {
@@ -40,7 +41,7 @@ const reduce: QueryReduce = (queryResults: GetQueryResultsOutput[]) => {
         }
     });
 
-    const total = amounts.reduce((sum, v) => sum + v) + config.InitialAmount;
+    const total = amounts.reduce((sum, v) => sum + v) + config.ExtraSupporters;
 
     return {
         total,

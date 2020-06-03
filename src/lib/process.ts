@@ -6,15 +6,15 @@ import {
 } from "aws-sdk/clients/athena";
 import {QueryFailedError, QueryPendingError} from "./errors";
 import {ManagedUpload} from "aws-sdk/lib/s3/managed_upload";
+import Athena = require("aws-sdk/clients/athena");
 
 const AWS = require('aws-sdk');
-const athena = new AWS.Athena({region: 'eu-west-1'});
 const s3 = new AWS.S3();
 
 // The function for producing the output data from Athena query results
 export type QueryReduce = (queryResults: GetQueryResultsOutput[]) => Object
 
-function getExecutionState(executionId: string): Promise<QueryExecutionState> {
+function getExecutionState(executionId: string, athena: Athena): Promise<QueryExecutionState> {
     return athena.getQueryExecution({QueryExecutionId: executionId}).promise()
         .then((getQueryExecutionOutput: GetQueryExecutionOutput) => {
             console.log(`Execution ${executionId} has status: ${JSON.stringify(getQueryExecutionOutput)}`);
@@ -29,7 +29,7 @@ function checkExecutionState(state: QueryExecutionState): Promise<QueryExecution
     else return Promise.resolve(state)
 }
 
-function getExecutionResult(executionId: string): Promise<GetQueryResultsOutput> {
+function getExecutionResult(executionId: string, athena: Athena): Promise<GetQueryResultsOutput> {
     return athena.getQueryResults({ QueryExecutionId: executionId }).promise();
 }
 
@@ -52,10 +52,11 @@ export function reduceAndWrite(
     reduce: QueryReduce,
     outputBucket: string,
     outputKey: string,
+    athena: Athena
 ): Promise<ManagedUpload.SendData> {
-    return Promise.all(executionIds.map(getExecutionState))
+    return Promise.all(executionIds.map(id => getExecutionState(id, athena)))
         .then((completionResults: QueryExecutionState[]) => Promise.all(completionResults.map(checkExecutionState)))
-        .then(() => Promise.all(executionIds.map(getExecutionResult)))
+        .then(() => Promise.all(executionIds.map(id => getExecutionResult(id, athena))))
         .then(reduce)
         .then(result => writeToS3(result, outputBucket, outputKey))
 }

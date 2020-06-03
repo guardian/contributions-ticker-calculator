@@ -3,9 +3,7 @@ import {
     StartQueryExecutionInput,
     StartQueryExecutionOutput
 } from "aws-sdk/clients/athena";
-
-const AWS = require('aws-sdk');
-const athena = new AWS.Athena({region: 'eu-west-1'});
+import Athena = require("aws-sdk/clients/athena");
 
 export class Query {
     query: string;
@@ -20,7 +18,7 @@ export class Query {
 /**
  * Executes Athena queries and returns the execution IDs
  */
-export function executeQueries(queries: Query[], athenaOutputBucket: string, schemaName: string): Promise<QueryExecutionId[]> {
+export function executeQueries(queries: Query[], athenaOutputBucket: string, schemaName: string, athena: Athena): Promise<QueryExecutionId[]> {
     const executeQuery = (query: Query): Promise<StartQueryExecutionOutput> => {
         const params: StartQueryExecutionInput = {
             QueryString: query.query,
