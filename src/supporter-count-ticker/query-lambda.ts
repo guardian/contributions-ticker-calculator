@@ -24,7 +24,7 @@ const singleContributionsQuery =
     "  COUNT(DISTINCT browser_id) AS cons " +
     "  FROM clean.acquisitions_no_pageview_data " +
     "WHERE " +
-    "  received_date >= DATE '2019-05-01' " +
+    "  received_date >= DATE '2019-06-15' " +
     "  AND country_code = 'AU' " +
     "  AND product = 'CONTRIBUTION'";
 
