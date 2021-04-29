@@ -68,7 +68,7 @@ Resources:
     Properties:
       FunctionName: !Sub supporter-count-ticker-query-lambda-${Stage}
       Description: Queries Athena for total supporters
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Handler: supporter-count-ticker/query-lambda.handler
       MemorySize: 128
       Timeout: 300
@@ -102,7 +102,7 @@ Resources:
     Properties:
       FunctionName: !Sub supporter-count-ticker-calculate-lambda-${Stage}
       Description: Gets the results of the Athena queries and updates the public ticker file
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Handler: supporter-count-ticker/calculate-lambda.handler
       MemorySize: 128
       Timeout: 300
