@@ -118,6 +118,11 @@ Resources:
             Resource:
               - !Sub "arn:aws:s3::*:${AthenaOutputBucket}/*"
               - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
+        - Statement:
+            Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - arn:aws:s3::*:membership-dist/*
 
   CalculateLambda:
     Type: AWS::Serverless::Function
@@ -149,6 +154,11 @@ Resources:
               - !Sub "arn:aws:s3::*:${AthenaOutputBucket}"
               - !Sub "arn:aws:s3::*:${TickerBucket}/*"
               - !Sub "arn:aws:s3::*:${TickerBucket}"
+        - Statement:
+            Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - arn:aws:s3::*:membership-dist/*
 
   StateMachineExecutionRole:
     Type: "AWS::IAM::Role"

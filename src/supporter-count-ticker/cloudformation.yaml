@@ -96,6 +96,11 @@ Resources:
             Action:
               - sts:AssumeRole
             Resource: !Ref CrossAccountRole
+        - Statement:
+            Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - arn:aws:s3::*:membership-dist/*
 
   CalculateLambda:
     Type: AWS::Serverless::Function
@@ -133,6 +138,11 @@ Resources:
             Action:
               - sts:AssumeRole
             Resource: !Ref CrossAccountRole
+        - Statement:
+            Effect: Allow
+            Action: s3:GetObject
+            Resource:
+              - arn:aws:s3::*:membership-dist/*
 
   StateMachineExecutionRole:
     Type: "AWS::IAM::Role"
