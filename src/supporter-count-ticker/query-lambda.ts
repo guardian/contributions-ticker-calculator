@@ -12,7 +12,7 @@ const config = new Config();
 
 const subscriptionsQuery =
     "SELECT " +
-    "  COUNT(DISTINCT identity_id) " +
+    "  COUNT(*) " +
     "  FROM clean.subscriptions " +
     "WHERE " +
     "  sold_to_country = 'Australia' " +
