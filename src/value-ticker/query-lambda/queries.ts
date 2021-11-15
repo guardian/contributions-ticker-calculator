@@ -9,7 +9,7 @@ const partitionDateField = 'acquisition_date';
 const fullQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE country_code = '${countryCode}' ` +
+        `WHERE countryCode = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
         (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' `,
@@ -19,34 +19,34 @@ const fullQuery = (startDate: Moment, countryCode: string, currency: string, tab
 const oneOffAndAnnuallyQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE country_code = '${countryCode}' ` +
+        `WHERE countryCode = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
         (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
-        `AND payment_frequency IN ('OneOff', 'Annually')`,
+        `AND paymentFrequency IN ('OneOff', 'Annually')`,
     'acquisition_events_oneOffAndAnnually'
 );
 
 const firstMonthlyQuery = (startDate: Moment, oneMonthBeforeEnd: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
     'SELECT SUM(amount)*2 ' +
         `FROM ${tableName} ` +
-        `WHERE country_code = '${countryCode}' ` +
+        `WHERE countryCode = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
         (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
         `AND ${partitionDateField} < date'${formatDateTime(oneMonthBeforeEnd)}' ` +
-        `AND payment_frequency='Monthly'`,
+        `AND paymentFrequency='Monthly'`,
     'acquisition_events_firstMonthlyQuery'
 );
 
 const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
     'SELECT SUM(amount) ' +
         `FROM ${tableName} ` +
-        `WHERE country_code = '${countryCode}' ` +
+        `WHERE countryCode = '${countryCode}' ` +
         `AND currency = '${currency}' ` +
         (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(oneMonthBeforeEnd)}' ` +
-        `AND payment_frequency='Monthly'`,
+        `AND paymentFrequency='Monthly'`,
     'acquisition_events_secondMonthlyQuery'
 );
 
