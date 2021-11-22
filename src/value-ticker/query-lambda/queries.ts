@@ -23,7 +23,7 @@ const oneOffAndAnnuallyQuery = (startDate: Moment, countryCode: string, currency
         `AND currency = '${currency}' ` +
         (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
-        `AND paymentFrequency IN ('OneOff', 'Annually')`,
+        `AND paymentFrequency IN ('ONE_OFF', 'ANNUALLY')`,
     'acquisition_events_oneOffAndAnnually'
 );
 
@@ -35,7 +35,7 @@ const firstMonthlyQuery = (startDate: Moment, oneMonthBeforeEnd: Moment, country
         (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
         `AND ${partitionDateField} < date'${formatDateTime(oneMonthBeforeEnd)}' ` +
-        `AND paymentFrequency='Monthly'`,
+        `AND paymentFrequency='MONTHLY'`,
     'acquisition_events_firstMonthlyQuery'
 );
 
@@ -46,7 +46,7 @@ const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryC
         `AND currency = '${currency}' ` +
         (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(oneMonthBeforeEnd)}' ` +
-        `AND paymentFrequency='Monthly'`,
+        `AND paymentFrequency='MONTHLY'`,
     'acquisition_events_secondMonthlyQuery'
 );
 
