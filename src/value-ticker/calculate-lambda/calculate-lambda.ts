@@ -15,6 +15,7 @@ class Config {
     GoalAmount: number = parseInt(process.env.GoalAmount);
 
     TickerBucket: string = process.env.TickerBucket;
+    OutputFilename: string = process.env.OutputFilename
 }
 
 const config = new Config();
@@ -24,7 +25,7 @@ export async function handler(executionIds: QueryExecutionId[]): Promise<Managed
         executionIds,
         reduce,
         config.TickerBucket,
-        `${config.Stage}/ticker.json`,
+        `${config.Stage}/${config.OutputFilename}`,
         athena
     );
 }
