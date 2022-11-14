@@ -59,6 +59,9 @@ Parameters:
   EndDate:
     Description: The end of the campaign, e.g. 2018-02-01
     Type: String
+  OutputFilename:
+    Description: The name of the file to output the results to in S3
+    Type: String
   CronExpression:
     Description: Cron expression for scheduling the step functions
     Type: String
@@ -98,6 +101,7 @@ Resources:
           Currency: !Ref Currency
           StartDate: !Ref StartDate
           EndDate: !Ref EndDate
+          OutputFilename: !Ref OutputFilename
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
