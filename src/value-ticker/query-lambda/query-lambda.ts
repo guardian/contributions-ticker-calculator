@@ -22,9 +22,9 @@ class Config {
     SchemaName: string = process.env.SchemaName;
 }
 
-const config = new Config();
+// const config = new Config();
 
-export async function handler(event): Promise<QueryExecutionId[]> {
+export async function handler(config: Config): Promise<QueryExecutionId[]> {
     console.log(event)
 
     const StartDate: Moment = moment(config.StartDate);

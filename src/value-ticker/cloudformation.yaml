@@ -91,16 +91,16 @@ Resources:
       Handler: value-ticker/query-lambda/query-lambda.handler
       MemorySize: 128
       Timeout: 300
-      Environment:
-        Variables:
-          Stage: !Ref Stage
-          AthenaOutputBucket: !Ref AthenaOutputBucket
-          SchemaName: !Ref SchemaName
-          CountryCode: !Ref CountryCode
-          CampaignCode: !Ref CampaignCode
-          Currency: !Ref Currency
-          StartDate: !Ref StartDate
-          EndDate: !Ref EndDate
+#      Environment:
+#        Variables:
+#          Stage: !Ref Stage
+#          AthenaOutputBucket: !Ref AthenaOutputBucket
+#          SchemaName: !Ref SchemaName
+#          CountryCode: !Ref CountryCode
+#          CampaignCode: !Ref CampaignCode
+#          Currency: !Ref Currency
+#          StartDate: !Ref StartDate
+#          EndDate: !Ref EndDate
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
@@ -136,13 +136,13 @@ Resources:
       Handler: value-ticker/calculate-lambda/calculate-lambda.handler
       MemorySize: 128
       Timeout: 300
-      Environment:
-        Variables:
-          Stage: !Ref Stage
-          InitialAmount: !Ref InitialAmount
-          GoalAmount: !Ref GoalAmount
-          TickerBucket: !Ref TickerBucket
-          OutputFilename: !Ref OutputFilename
+#      Environment:
+#        Variables:
+#          Stage: !Ref Stage
+#          InitialAmount: !Ref InitialAmount
+#          GoalAmount: !Ref GoalAmount
+#          TickerBucket: !Ref TickerBucket
+#          OutputFilename: !Ref OutputFilename
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
@@ -205,7 +205,14 @@ Resources:
                   "Resource": "${QueryLambdaArn}",
                   "Next": "Calculate",
                   "Parameters": {
-                    "name": "US_2022"
+                    "Stage": "${Stage}",
+                    "AthenaOutputBucket": "${AthenaOutputBucket}",
+                    "SchemaName": "${SchemaName}",
+                    "CountryCode": "${CountryCode}",
+                    "CampaignCode": "${CampaignCode}",
+                    "Currency": "${Currency}",
+                    "StartDate": "${StartDate}",
+                    "EndDate": "${EndDate}"
                   }
                 },
                 "Calculate": {
@@ -217,6 +224,13 @@ Resources:
                     "IntervalSeconds": 10,
                     "MaxAttempts": 5
                   }]
+                  "Parameters": {
+                    "Stage": "${Stage}",
+                    "InitialAmount": "${InitialAmount}",
+                    "GoalAmount": "${GoalAmount}",
+                    "TickerBucket": "${TickerBucket}",
+                    "OutputFilename": "${OutputFilename}"
+                  }
                 }
               }
             }

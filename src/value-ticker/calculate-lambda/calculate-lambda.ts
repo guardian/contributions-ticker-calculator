@@ -21,7 +21,7 @@ class Config {
 const config = new Config();
 
 export async function handler(executionIds: QueryExecutionId[]): Promise<ManagedUpload.SendData> {
-    console.log(config);
+    console.log(executionIds);
     return reduceAndWrite(
         executionIds,
         reduce,
