@@ -208,7 +208,8 @@ Resources:
                   "Next": "Calculate",
                   "Parameters": {
                     "Name": "US_2022"
-                  }
+                  },
+                  "ResultPath": "$.executionIds"
                 },
                 "Calculate": {
                   "Type": "Task",
