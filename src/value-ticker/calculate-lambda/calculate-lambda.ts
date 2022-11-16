@@ -15,12 +15,13 @@ class Config {
     GoalAmount: number = parseInt(process.env.GoalAmount);
 
     TickerBucket: string = process.env.TickerBucket;
-    OutputFilename: string = process.env.OutputFilename
+    OutputFilename: string = process.env.OutputFilename;
 }
 
 const config = new Config();
 
 export async function handler(executionIds: QueryExecutionId[]): Promise<ManagedUpload.SendData> {
+    console.log(config);
     return reduceAndWrite(
         executionIds,
         reduce,
