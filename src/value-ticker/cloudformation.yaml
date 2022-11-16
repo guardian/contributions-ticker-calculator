@@ -256,8 +256,8 @@ Resources:
         - Arn: !Ref StateMachine
           RoleArn: !GetAtt TriggerExecutionRole.Arn
           Id: !GetAtt StateMachine.Name
-          Input: !Sub
-            - |
+          Input:
+            !Sub '{
               "Stage": "${Stage}",
               "AthenaOutputBucket": "${AthenaOutputBucket}",
               "SchemaName": "${SchemaName}",
@@ -266,6 +266,7 @@ Resources:
               "Currency": "${Currency}",
               "StartDate": "${StartDate}",
               "EndDate": "${EndDate}"
+            }'
 
   ExecutionFailureAlarm:
     Type: AWS::CloudWatch::Alarm
