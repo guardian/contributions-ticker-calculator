@@ -209,7 +209,7 @@ Resources:
                   "Parameters": {
                     "Name": "US_2022"
                   },
-                  "ResultPath": "$.executionIds"
+                  "OutputPath": "$.executionIds"
                 },
                 "Calculate": {
                   "Type": "Task",
@@ -221,7 +221,8 @@ Resources:
                     "MaxAttempts": 5
                   }],
                   "Parameters": {
-                    "Name": "US_2022"
+                    "Name": "US_2022",
+                    "ExecutionIds.$": "$"
                   }
                 }
               }

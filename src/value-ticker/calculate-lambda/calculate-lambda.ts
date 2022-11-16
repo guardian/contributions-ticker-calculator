@@ -20,16 +20,16 @@ class Config {
 const stage = process.env.Stage;
 
 interface Event {
-    executionIds: QueryExecutionId[];
+    ExecutionIds: QueryExecutionId[];
     Name: string;
 }
 
 export async function handler(event: Event): Promise<ManagedUpload.SendData> {
     console.log({event})
-    const config: Config = await getConfig(stage);
+    const config: Config = (await getConfig(stage))[event.Name];
     console.log({config})
     return reduceAndWrite(
-        event.executionIds,
+        event.ExecutionIds,
         reduce(config),
         config.TickerBucket,
         `${stage}/${config.OutputFilename}`,
