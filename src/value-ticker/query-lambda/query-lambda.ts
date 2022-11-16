@@ -25,7 +25,7 @@ class Config {
 // const config = new Config();
 
 export async function handler(config: Config): Promise<QueryExecutionId[]> {
-    console.log(event)
+    console.log(config)
 
     const StartDate: Moment = moment(config.StartDate);
     const EndDate: Moment = moment(config.EndDate);
