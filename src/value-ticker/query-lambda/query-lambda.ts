@@ -24,7 +24,8 @@ class Config {
 
 const config = new Config();
 
-export async function handler(): Promise<QueryExecutionId[]> {
+export async function handler(event): Promise<QueryExecutionId[]> {
+    console.log(event)
 
     const StartDate: Moment = moment(config.StartDate);
     const EndDate: Moment = moment(config.EndDate);
