@@ -1,0 +1,13 @@
+stacks: [support]
+regions: [eu-west-1]
+
+deployments:
+  contributions-ticker-calculator-us:
+    type: aws-lambda
+    parameters:
+      prefixStack: false
+      bucket: membership-dist
+      fileName: contributions-ticker-calculator.zip
+      functionNames:
+        - contributions-ticker-query-lambda-us-
+        - contributions-ticker-calculate-lambda-us-

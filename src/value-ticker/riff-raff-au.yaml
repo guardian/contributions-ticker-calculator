@@ -2,12 +2,12 @@ stacks: [support]
 regions: [eu-west-1]
 
 deployments:
-  contributions-ticker-calculator:
+  contributions-ticker-calculator-au:
     type: aws-lambda
     parameters:
       prefixStack: false
       bucket: membership-dist
       fileName: contributions-ticker-calculator.zip
       functionNames:
-        - contributions-ticker-query-lambda-
-        - contributions-ticker-calculate-lambda-
+        - contributions-ticker-query-lambda-au-
+        - contributions-ticker-calculate-lambda-au-
