@@ -20,7 +20,9 @@ class Config {
 const stage = process.env.Stage;
 
 export async function handler(executionIds: QueryExecutionId[]): Promise<ManagedUpload.SendData> {
+    console.log({executionIds})
     const config: Config = await getConfig(stage);
+    console.log({config})
     return reduceAndWrite(
         executionIds,
         reduce(config),

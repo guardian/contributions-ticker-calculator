@@ -206,6 +206,9 @@ Resources:
                   "Type": "Task",
                   "Resource": "${QueryLambdaArn}",
                   "Next": "Calculate"
+                  "Parameters": {
+                    "Name": "US_2022"
+                  }
                 },
                 "Calculate": {
                   "Type": "Task",
@@ -215,7 +218,10 @@ Resources:
                     "ErrorEquals": ["QueryPendingError"],
                     "IntervalSeconds": 10,
                     "MaxAttempts": 5
-                  }]
+                  }],
+                  "Parameters": {
+                    "Name": "US_2022"
+                  }
                 }
               }
             }
