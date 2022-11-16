@@ -13,7 +13,7 @@ yarn run build
 
 # These also need to be in the RiffRaff package
 cp package.json target
-cp riff-raff-$1.yaml target
+cp riff-raff-$1.yaml target/riff-raff.yaml
 
 pushd target
 # Ensures the RiffRaff package has the node_modules needed to run
