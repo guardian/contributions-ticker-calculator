@@ -12,10 +12,10 @@ AWS.config.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 AWS.config.sessionToken = process.env.AWS_SESSION_TOKEN;
 AWS.config.region = "eu-west-1";
 
-async function run() {
-    await handler({ name: 'US_2022' })
-        .then(result => console.log(`Result: ${JSON.stringify(result)}`))
-        .catch(err => console.log(`Error: ${err}`))
-}
-
-run();
+// async function run() {
+//     await handler({ name: 'US_2022' })
+//         .then(result => console.log(`Result: ${JSON.stringify(result)}`))
+//         .catch(err => console.log(`Error: ${err}`))
+// }
+//
+// run();
