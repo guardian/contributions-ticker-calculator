@@ -91,9 +91,9 @@ Resources:
       Handler: value-ticker/query-lambda/query-lambda.handler
       MemorySize: 128
       Timeout: 300
-#      Environment:
-#        Variables:
-#          Stage: !Ref Stage
+      Environment:
+        Variables:
+          Stage: !Ref Stage
 #          AthenaOutputBucket: !Ref AthenaOutputBucket
 #          SchemaName: !Ref SchemaName
 #          CountryCode: !Ref CountryCode
@@ -126,7 +126,7 @@ Resources:
             Action: s3:GetObject
             Resource:
               - arn:aws:s3::*:membership-dist/*
-              - arn:aws:s3::*:membership-private/${Stage}/ticker.conf.json
+              - !Sub arn:aws:s3::*:membership-private/${Stage}/ticker.conf.json
 
   CalculateLambda:
     Type: AWS::Serverless::Function
@@ -137,9 +137,9 @@ Resources:
       Handler: value-ticker/calculate-lambda/calculate-lambda.handler
       MemorySize: 128
       Timeout: 300
-#      Environment:
-#        Variables:
-#          Stage: !Ref Stage
+      Environment:
+        Variables:
+          Stage: !Ref Stage
 #          InitialAmount: !Ref InitialAmount
 #          GoalAmount: !Ref GoalAmount
 #          TickerBucket: !Ref TickerBucket
