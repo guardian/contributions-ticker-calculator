@@ -25,9 +25,9 @@ interface Event {
 }
 
 export async function handler(event: Event): Promise<ManagedUpload.SendData> {
-    console.log({event})
+    console.log({event});
     const config: Config = (await getConfig(stage))[event.Name];
-    console.log({config})
+
     return reduceAndWrite(
         event.ExecutionIds,
         reduce(config),

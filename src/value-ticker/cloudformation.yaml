@@ -94,13 +94,6 @@ Resources:
       Environment:
         Variables:
           Stage: !Ref Stage
-#          AthenaOutputBucket: !Ref AthenaOutputBucket
-#          SchemaName: !Ref SchemaName
-#          CountryCode: !Ref CountryCode
-#          CampaignCode: !Ref CampaignCode
-#          Currency: !Ref Currency
-#          StartDate: !Ref StartDate
-#          EndDate: !Ref EndDate
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
@@ -140,10 +133,6 @@ Resources:
       Environment:
         Variables:
           Stage: !Ref Stage
-#          InitialAmount: !Ref InitialAmount
-#          GoalAmount: !Ref GoalAmount
-#          TickerBucket: !Ref TickerBucket
-#          OutputFilename: !Ref OutputFilename
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip

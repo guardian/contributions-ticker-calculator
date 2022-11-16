@@ -23,10 +23,13 @@ class Config {
 
 const stage = process.env.Stage;
 
-export async function handler(event): Promise<QueryExecutionId[]> {
-    console.log({event})
+interface Event {
+    Name: string;
+}
+
+export async function handler(event: Event): Promise<QueryExecutionId[]> {
+    console.log({event});
     const config: Config = (await getConfig(stage))[event.Name];
-    console.log({config})
 
     const StartDate: Moment = moment(config.StartDate);
     const EndDate: Moment = moment(config.EndDate);
