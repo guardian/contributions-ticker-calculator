@@ -205,7 +205,7 @@ Resources:
                 "Query": {
                   "Type": "Task",
                   "Resource": "${QueryLambdaArn}",
-                  "Next": "Calculate"
+                  "Next": "Calculate",
                   "Parameters": {
                     "Name": "US_2022"
                   }

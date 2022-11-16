@@ -14,7 +14,7 @@ export const getConfig = (stage: string) => {
         .promise()
         .then((result: GetObjectOutput) => {
             if (result.Body) {
-                return result.Body.toString();
+                return JSON.parse(result.Body.toString());
             } else {
                 return Promise.reject(
                     new Error(`Missing Body in S3 response for ${Bucket}/${Key}`),
