@@ -85,7 +85,7 @@ Resources:
   QueryLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub contributions-ticker-query-lambda-${Stage}
+      FunctionName: !Sub contributions-ticker-query-lambda-${CountryCode}-${Stage}
       Description: Queries Athena for total amounts contributed during a campaign
       Runtime: nodejs12.x
       Handler: value-ticker/query-lambda/query-lambda.handler
@@ -130,7 +130,7 @@ Resources:
   CalculateLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub contributions-ticker-calculate-lambda-${Stage}
+      FunctionName: !Sub contributions-ticker-calculate-lambda-${CountryCode}-${Stage}
       Description: Gets the results of the Athena queries and updates the public ticker file
       Runtime: nodejs12.x
       Handler: value-ticker/calculate-lambda/calculate-lambda.handler
@@ -192,7 +192,7 @@ Resources:
       - CalculateLambda
     Properties:
       StateMachineName:
-        !Sub ${App}-${Stage}
+        !Sub ${App}-${CountryCode}-${Stage}
       DefinitionString:
         !Sub
           - |
@@ -247,7 +247,7 @@ Resources:
   Schedule:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub contributions-ticker-calculator-schedule-${Stage}
+      Name: !Sub contributions-ticker-calculator-schedule-${CountryCode}-${Stage}
       ScheduleExpression: !Sub cron(${CronExpression})
       State: !Ref ScheduleState
       Targets:
@@ -261,7 +261,7 @@ Resources:
     Properties:
       AlarmActions:
       - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${SNSTopicForAlerts}
-      AlarmName: !Sub ${App}-failed-${Stage}
+      AlarmName: !Sub ${App}-${CountryCode}-failed-${Stage}
       AlarmDescription: !Sub Ticker calculation failed twice in 30mins for stage ${Stage}
       MetricName: ExecutionsFailed
       Namespace: AWS/States
