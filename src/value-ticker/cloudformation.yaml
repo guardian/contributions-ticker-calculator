@@ -126,6 +126,7 @@ Resources:
             Action: s3:GetObject
             Resource:
               - arn:aws:s3::*:membership-dist/*
+              - arn:aws:s3::*:membership-private/${Stage}/ticker.conf.json
 
   CalculateLambda:
     Type: AWS::Serverless::Function
@@ -163,6 +164,7 @@ Resources:
             Action: s3:GetObject
             Resource:
               - arn:aws:s3::*:membership-dist/*
+              - arn:aws:s3::*:membership-private/${Stage}/ticker.conf.json
 
   StateMachineExecutionRole:
     Type: "AWS::IAM::Role"
@@ -203,17 +205,7 @@ Resources:
                 "Query": {
                   "Type": "Task",
                   "Resource": "${QueryLambdaArn}",
-                  "Next": "Calculate",
-                  "Parameters": {
-                    "Stage": "${Stage}",
-                    "AthenaOutputBucket": "${AthenaOutputBucket}",
-                    "SchemaName": "${SchemaName}",
-                    "CountryCode": "${CountryCode}",
-                    "CampaignCode": "${CampaignCode}",
-                    "Currency": "${Currency}",
-                    "StartDate": "${StartDate}",
-                    "EndDate": "${EndDate}"
-                  }
+                  "Next": "Calculate"
                 },
                 "Calculate": {
                   "Type": "Task",
@@ -224,13 +216,6 @@ Resources:
                     "IntervalSeconds": 10,
                     "MaxAttempts": 5
                   }]
-                  "Parameters": {
-                    "Stage": "${Stage}",
-                    "InitialAmount": "${InitialAmount}",
-                    "GoalAmount": "${GoalAmount}",
-                    "TickerBucket": "${TickerBucket}",
-                    "OutputFilename": "${OutputFilename}"
-                  }
                 }
               }
             }
@@ -271,6 +256,16 @@ Resources:
         - Arn: !Ref StateMachine
           RoleArn: !GetAtt TriggerExecutionRole.Arn
           Id: !GetAtt StateMachine.Name
+          Input: !Sub
+            - |
+              "Stage": "${Stage}",
+              "AthenaOutputBucket": "${AthenaOutputBucket}",
+              "SchemaName": "${SchemaName}",
+              "CountryCode": "${CountryCode}",
+              "CampaignCode": "${CampaignCode}",
+              "Currency": "${Currency}",
+              "StartDate": "${StartDate}",
+              "EndDate": "${EndDate}"
 
   ExecutionFailureAlarm:
     Type: AWS::CloudWatch::Alarm

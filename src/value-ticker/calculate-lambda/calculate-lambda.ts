@@ -4,34 +4,33 @@ import {
     QueryExecutionId,
 } from "aws-sdk/clients/athena";
 import {QueryReduce, reduceAndWrite} from "../../lib/process";
+import {getConfig} from "../../lib/s3";
 
 const AWS = require('aws-sdk');
 const athena = new AWS.Athena({region: 'eu-west-1'});
 
 class Config {
-    Stage: string = process.env.Stage;
+    InitialAmount: number;
+    GoalAmount: number;
 
-    InitialAmount: number = parseInt(process.env.InitialAmount);
-    GoalAmount: number = parseInt(process.env.GoalAmount);
-
-    TickerBucket: string = process.env.TickerBucket;
-    OutputFilename: string = process.env.OutputFilename;
+    TickerBucket: string;
+    OutputFilename: string;
 }
 
-const config = new Config();
+const stage = process.env.Stage;
 
 export async function handler(executionIds: QueryExecutionId[]): Promise<ManagedUpload.SendData> {
-    console.log(executionIds);
+    const config: Config = await getConfig(stage);
     return reduceAndWrite(
         executionIds,
-        reduce,
+        reduce(config),
         config.TickerBucket,
-        `${config.Stage}/${config.OutputFilename}`,
+        `${stage}/${config.OutputFilename}`,
         athena
     );
 }
 
-const reduce: QueryReduce = (queryResults: GetQueryResultsOutput[]) => {
+const reduce = (config: Config): QueryReduce => (queryResults: GetQueryResultsOutput[]) => {
     const amounts: number[] = queryResults.map((result: GetQueryResultsOutput) => {
         const value = parseFloat(result.ResultSet.Rows[1].Data[0].VarCharValue);
         if (value) return value;

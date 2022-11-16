@@ -3,28 +3,28 @@ import moment = require("moment");
 import {Moment} from "moment";
 import {getQueries} from "./queries";
 import {executeQueries} from "../../lib/query";
+import {getConfig} from "../../lib/s3";
 
 const AWS = require('aws-sdk');
 const athena = new AWS.Athena({region: 'eu-west-1'});
 
 class Config {
-    Stage: string = process.env.Stage;
+    StartDate: string;
+    EndDate: string;
 
-    StartDate: string = process.env.StartDate;
-    EndDate: string = process.env.EndDate;
+    CountryCode: string;
+    Currency: string;
+    CampaignCode: string;
 
-    CountryCode: string = process.env.CountryCode;
-    Currency: string = process.env.Currency;
-    CampaignCode: string = process.env.CampaignCode;
+    AthenaOutputBucket: string;
 
-    AthenaOutputBucket: string = process.env.AthenaOutputBucket;
-
-    SchemaName: string = process.env.SchemaName;
+    SchemaName: string;
 }
 
-// const config = new Config();
+const stage = process.env.Stage;
 
-export async function handler(config: Config): Promise<QueryExecutionId[]> {
+export async function handler(): Promise<QueryExecutionId[]> {
+    const config: Config = await getConfig(stage);
     console.log(config)
 
     const StartDate: Moment = moment(config.StartDate);
@@ -32,7 +32,7 @@ export async function handler(config: Config): Promise<QueryExecutionId[]> {
 
     console.log(`Getting total for period ${config.StartDate}-${config.EndDate} with country code ${config.CountryCode} and currency ${config.Currency}`);
 
-    const queries = getQueries(StartDate, EndDate, config.CountryCode, config.Currency, config.Stage, config.CampaignCode);
+    const queries = getQueries(StartDate, EndDate, config.CountryCode, config.Currency, stage, config.CampaignCode);
 
     return executeQueries(queries, config.AthenaOutputBucket, config.SchemaName, athena);
 }
