@@ -101,7 +101,6 @@ Resources:
           Currency: !Ref Currency
           StartDate: !Ref StartDate
           EndDate: !Ref EndDate
-          OutputFilename: !Ref OutputFilename
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
@@ -143,6 +142,7 @@ Resources:
           InitialAmount: !Ref InitialAmount
           GoalAmount: !Ref GoalAmount
           TickerBucket: !Ref TickerBucket
+          OutputFilename: !Ref OutputFilename
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
