@@ -6,8 +6,7 @@
     "EndDate": "2022-01-01",
 
     "InitialAmount": 850000,
-    "GoalAmount": 1250000,
-    "OutputFilename": "US_2022.json"
+    "GoalAmount": 1250000
   },
   "AU_2022": {
     "CountryCode": "AU",
@@ -16,7 +15,6 @@
     "EndDate": "2022-01-01",
 
     "InitialAmount": 850000,
-    "GoalAmount": 1250000,
-    "OutputFilename": "AU_2022.json"
+    "GoalAmount": 1250000
   }
 }
