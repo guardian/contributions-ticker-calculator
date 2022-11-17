@@ -218,8 +218,7 @@ Resources:
         - Arn: !Ref StateMachine
           RoleArn: !GetAtt TriggerExecutionRole.Arn
           Id: !GetAtt StateMachine.Name
-          Input:
-            !Sub '{ "Name": "US_2022" }'
+          Input: '{ "Name": "US_2022" }'
   ScheduleAU:
     Type: AWS::Events::Rule
     Properties:
@@ -230,8 +229,7 @@ Resources:
         - Arn: !Ref StateMachine
           RoleArn: !GetAtt TriggerExecutionRole.Arn
           Id: !GetAtt StateMachine.Name
-          Input:
-            !Sub '{ "Name": "AU_2022" }'
+          Input: '{ "Name": "AU_2022" }'
 
   ExecutionFailureAlarm:
     Type: AWS::CloudWatch::Alarm
