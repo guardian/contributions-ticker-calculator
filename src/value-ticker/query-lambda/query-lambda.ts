@@ -11,17 +11,14 @@ const athena = new AWS.Athena({region: 'eu-west-1'});
 class Config {
     StartDate: string;
     EndDate: string;
-
     CountryCode: string;
     Currency: string;
-    CampaignCode: string;
-
-    AthenaOutputBucket: string;
-
-    SchemaName: string;
+    CampaignCode?: string;
 }
 
 const stage = process.env.Stage;
+const athenaOutputBucket = process.env.AthenaOutputBucket;
+const schemaName = 'acquisition';
 
 interface QueryLambdaEvent {
     Name: string;
@@ -38,7 +35,7 @@ export async function handler(event: QueryLambdaEvent): Promise<CalculateLambdaE
 
     const queries = getQueries(StartDate, EndDate, config.CountryCode, config.Currency, stage, config.CampaignCode);
 
-    return executeQueries(queries, config.AthenaOutputBucket, config.SchemaName, athena)
+    return executeQueries(queries, athenaOutputBucket, schemaName, athena)
         .then(executionIds => ({
             ExecutionIds: executionIds,
             Name: event.Name,

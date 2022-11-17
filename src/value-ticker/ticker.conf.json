@@ -1,8 +1,5 @@
 {
   "US_2022": {
-    "Stage": "CODE",
-    "AthenaOutputBucket": "acquisition-events-output",
-    "SchemaName": "acquisition",
     "CountryCode": "US",
     "Currency": "USD",
     "StartDate": "2021-11-22",
@@ -10,13 +7,9 @@
 
     "InitialAmount": 850000,
     "GoalAmount": 1250000,
-    "TickerBucket": "contributions-ticker",
     "OutputFilename": "US_2022.json"
   },
   "AU_2022": {
-    "Stage": "CODE",
-    "AthenaOutputBucket": "acquisition-events-output",
-    "SchemaName": "acquisition",
     "CountryCode": "AU",
     "Currency": "AUD",
     "StartDate": "2021-11-22",
@@ -24,7 +17,6 @@
 
     "InitialAmount": 850000,
     "GoalAmount": 1250000,
-    "TickerBucket": "contributions-ticker",
     "OutputFilename": "AU_2022.json"
   }
 }

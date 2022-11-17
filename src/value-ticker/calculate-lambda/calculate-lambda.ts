@@ -12,12 +12,11 @@ const athena = new AWS.Athena({region: 'eu-west-1'});
 class Config {
     InitialAmount: number;
     GoalAmount: number;
-
-    TickerBucket: string;
     OutputFilename: string;
 }
 
 const stage = process.env.Stage;
+const tickerBucket = process.env.TickerBucket
 
 export interface CalculateLambdaEvent {
     ExecutionIds: QueryExecutionId[];
@@ -31,7 +30,7 @@ export async function handler(event: CalculateLambdaEvent): Promise<ManagedUploa
     return reduceAndWrite(
         event.ExecutionIds,
         reduce(config),
-        config.TickerBucket,
+        tickerBucket,
         `${stage}/${config.OutputFilename}`,
         athena
     );
