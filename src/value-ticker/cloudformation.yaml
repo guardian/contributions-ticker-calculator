@@ -194,10 +194,7 @@ Resources:
                 "Query": {
                   "Type": "Task",
                   "Resource": "${QueryLambdaArn}",
-                  "Next": "Calculate",
-                  "Parameters": {
-                    "Name": "US_2022"
-                  }
+                  "Next": "Calculate"
                 },
                 "Calculate": {
                   "Type": "Task",
@@ -207,11 +204,7 @@ Resources:
                     "ErrorEquals": ["QueryPendingError"],
                     "IntervalSeconds": 10,
                     "MaxAttempts": 5
-                  }],
-                  "Parameters": {
-                    "Name": "US_2022",
-                    "ExecutionIds.$": "$"
-                  }
+                  }]
                 }
               }
             }
@@ -253,16 +246,7 @@ Resources:
           RoleArn: !GetAtt TriggerExecutionRole.Arn
           Id: !GetAtt StateMachine.Name
           Input:
-            !Sub '{
-              "Stage": "${Stage}",
-              "AthenaOutputBucket": "${AthenaOutputBucket}",
-              "SchemaName": "${SchemaName}",
-              "CountryCode": "${CountryCode}",
-              "CampaignCode": "${CampaignCode}",
-              "Currency": "${Currency}",
-              "StartDate": "${StartDate}",
-              "EndDate": "${EndDate}"
-            }'
+            !Sub '{ "Name": "US_2022" }'
 
   ExecutionFailureAlarm:
     Type: AWS::CloudWatch::Alarm

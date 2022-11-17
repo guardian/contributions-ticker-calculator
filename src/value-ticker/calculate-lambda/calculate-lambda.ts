@@ -19,12 +19,12 @@ class Config {
 
 const stage = process.env.Stage;
 
-interface Event {
+export interface CalculateLambdaEvent {
     ExecutionIds: QueryExecutionId[];
     Name: string;
 }
 
-export async function handler(event: Event): Promise<ManagedUpload.SendData> {
+export async function handler(event: CalculateLambdaEvent): Promise<ManagedUpload.SendData> {
     console.log({event});
     const config: Config = (await getConfig(stage))[event.Name];
 
