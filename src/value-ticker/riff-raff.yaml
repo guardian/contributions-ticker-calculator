@@ -11,3 +11,8 @@ deployments:
       functionNames:
         - contributions-ticker-query-lambda-
         - contributions-ticker-calculate-lambda-
+  contributions-ticker-calculator-cloudformation:
+    type: cloud-formation
+    app: contributions-ticker-calculator
+    parameters:
+      templatePath: cloudformation/cloudformation.yaml
