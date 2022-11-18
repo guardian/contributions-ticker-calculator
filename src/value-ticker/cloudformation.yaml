@@ -29,39 +29,10 @@ Parameters:
     Description: Name of the bucket to output athena query results to
     Type: String
     Default: acquisition-events-output
-  SchemaName:
-    Description: The schema name for the query
-    Type: String
-    Default: acquisition
-  InitialAmount:
-    Description: Amount to add to the result of the query
-    Type: Number
-    Default: 0
-  GoalAmount:
-    Description: The campaign goal amount
-    Type: Number
-  CountryCode:
-    Description: Country code to filter by
-    Type: String
-  Currency:
-    Description: Currency to filter by
-    Type: String
-  CampaignCode:
-    Description: Campaign code to filter on
-    Type: String
   TickerBucket:
     Description: Bucket to output the result to
     Type: String
     Default: contributions-ticker
-  StartDate:
-    Description: The start of the campaign, e.g. 2018-01-01
-    Type: String
-  EndDate:
-    Description: The end of the campaign, e.g. 2018-02-01
-    Type: String
-  OutputFilename:
-    Description: The name of the file to output the results to in S3
-    Type: String
   CronExpression:
     Description: Cron expression for scheduling the step functions
     Type: String
@@ -85,7 +56,7 @@ Resources:
   QueryLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub contributions-ticker-query-lambda-${CountryCode}-${Stage}
+      FunctionName: !Sub contributions-ticker-query-lambda-${Stage}
       Description: Queries Athena for total amounts contributed during a campaign
       Runtime: nodejs12.x
       Handler: value-ticker/query-lambda/query-lambda.handler
@@ -95,12 +66,6 @@ Resources:
         Variables:
           Stage: !Ref Stage
           AthenaOutputBucket: !Ref AthenaOutputBucket
-          SchemaName: !Ref SchemaName
-          CountryCode: !Ref CountryCode
-          CampaignCode: !Ref CampaignCode
-          Currency: !Ref Currency
-          StartDate: !Ref StartDate
-          EndDate: !Ref EndDate
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
@@ -126,11 +91,12 @@ Resources:
             Action: s3:GetObject
             Resource:
               - arn:aws:s3::*:membership-dist/*
+              - !Sub arn:aws:s3::*:membership-private/${Stage}/ticker.conf.json
 
   CalculateLambda:
     Type: AWS::Serverless::Function
     Properties:
-      FunctionName: !Sub contributions-ticker-calculate-lambda-${CountryCode}-${Stage}
+      FunctionName: !Sub contributions-ticker-calculate-lambda-${Stage}
       Description: Gets the results of the Athena queries and updates the public ticker file
       Runtime: nodejs12.x
       Handler: value-ticker/calculate-lambda/calculate-lambda.handler
@@ -139,10 +105,7 @@ Resources:
       Environment:
         Variables:
           Stage: !Ref Stage
-          InitialAmount: !Ref InitialAmount
-          GoalAmount: !Ref GoalAmount
           TickerBucket: !Ref TickerBucket
-          OutputFilename: !Ref OutputFilename
       CodeUri:
         Bucket: !Ref DeployBucket
         Key: !Sub ${Stack}/${Stage}/${App}/${App}.zip
@@ -163,6 +126,7 @@ Resources:
             Action: s3:GetObject
             Resource:
               - arn:aws:s3::*:membership-dist/*
+              - !Sub arn:aws:s3::*:membership-private/${Stage}/ticker.conf.json
 
   StateMachineExecutionRole:
     Type: "AWS::IAM::Role"
@@ -192,7 +156,7 @@ Resources:
       - CalculateLambda
     Properties:
       StateMachineName:
-        !Sub ${App}-${CountryCode}-${Stage}
+        !Sub ${App}-${Stage}
       DefinitionString:
         !Sub
           - |
@@ -244,16 +208,28 @@ Resources:
             - states:StartExecution
             Resource: !Ref StateMachine
 
-  Schedule:
+  ScheduleUS:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub contributions-ticker-calculator-schedule-${CountryCode}-${Stage}
+      Name: !Sub contributions-ticker-calculator-schedule-US_2022-${Stage}
       ScheduleExpression: !Sub cron(${CronExpression})
       State: !Ref ScheduleState
       Targets:
         - Arn: !Ref StateMachine
           RoleArn: !GetAtt TriggerExecutionRole.Arn
           Id: !GetAtt StateMachine.Name
+          Input: '{ "Name": "US_2022" }'
+  ScheduleAU:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: !Sub contributions-ticker-calculator-schedule-AU_2022-${Stage}
+      ScheduleExpression: !Sub cron(${CronExpression})
+      State: !Ref ScheduleState
+      Targets:
+        - Arn: !Ref StateMachine
+          RoleArn: !GetAtt TriggerExecutionRole.Arn
+          Id: !GetAtt StateMachine.Name
+          Input: '{ "Name": "AU_2022" }'
 
   ExecutionFailureAlarm:
     Type: AWS::CloudWatch::Alarm
@@ -261,7 +237,7 @@ Resources:
     Properties:
       AlarmActions:
       - !Sub arn:aws:sns:${AWS::Region}:${AWS::AccountId}:${SNSTopicForAlerts}
-      AlarmName: !Sub ${App}-${CountryCode}-failed-${Stage}
+      AlarmName: !Sub ${App}-failed-${Stage}
       AlarmDescription: !Sub Ticker calculation failed twice in 30mins for stage ${Stage}
       MetricName: ExecutionsFailed
       Namespace: AWS/States

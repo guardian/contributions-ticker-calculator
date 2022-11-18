@@ -1,7 +1,7 @@
 {
   "name": "contributions-ticker-calculator",
   "isAwsLambda": true,
-  "cloudformation": false,
+  "cloudformation": "../cloudformation.yaml",
   "projectName": "Contributions::contributions-ticker-calculator",
   "buildDir": "./target",
   "riffraffFile": "./riff-raff.yaml",

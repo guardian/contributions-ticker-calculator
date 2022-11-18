@@ -4,34 +4,38 @@ import {
     QueryExecutionId,
 } from "aws-sdk/clients/athena";
 import {QueryReduce, reduceAndWrite} from "../../lib/process";
+import {getConfig} from "../../lib/s3";
 
 const AWS = require('aws-sdk');
 const athena = new AWS.Athena({region: 'eu-west-1'});
 
 class Config {
-    Stage: string = process.env.Stage;
-
-    InitialAmount: number = parseInt(process.env.InitialAmount);
-    GoalAmount: number = parseInt(process.env.GoalAmount);
-
-    TickerBucket: string = process.env.TickerBucket;
-    OutputFilename: string = process.env.OutputFilename;
+    InitialAmount: number;
+    GoalAmount: number;
 }
 
-const config = new Config();
+const stage = process.env.Stage;
+const tickerBucket = process.env.TickerBucket
 
-export async function handler(executionIds: QueryExecutionId[]): Promise<ManagedUpload.SendData> {
-    console.log(config);
+export interface CalculateLambdaEvent {
+    ExecutionIds: QueryExecutionId[];
+    Name: string;
+}
+
+export async function handler(event: CalculateLambdaEvent): Promise<ManagedUpload.SendData> {
+    console.log({event});
+    const config: Config = (await getConfig(stage))[event.Name];
+
     return reduceAndWrite(
-        executionIds,
-        reduce,
-        config.TickerBucket,
-        `${config.Stage}/${config.OutputFilename}`,
+        event.ExecutionIds,
+        reduce(config),
+        tickerBucket,
+        `${stage}/${event.Name}.json`,
         athena
     );
 }
 
-const reduce: QueryReduce = (queryResults: GetQueryResultsOutput[]) => {
+const reduce = (config: Config): QueryReduce => (queryResults: GetQueryResultsOutput[]) => {
     const amounts: number[] = queryResults.map((result: GetQueryResultsOutput) => {
         const value = parseFloat(result.ResultSet.Rows[1].Data[0].VarCharValue);
         if (value) return value;

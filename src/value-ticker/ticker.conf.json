@@ -1,0 +1,20 @@
+{
+  "US_2022": {
+    "CountryCode": "US",
+    "Currency": "USD",
+    "StartDate": "2021-11-22",
+    "EndDate": "2022-01-01",
+
+    "InitialAmount": 850000,
+    "GoalAmount": 1250000
+  },
+  "AU_2022": {
+    "CountryCode": "AU",
+    "Currency": "AUD",
+    "StartDate": "2021-11-22",
+    "EndDate": "2022-01-01",
+
+    "InitialAmount": 850000,
+    "GoalAmount": 1250000
+  }
+}
