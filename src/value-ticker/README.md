@@ -16,7 +16,7 @@ Events from this stream are processed by the [acquisitions-firehose-transformer]
 
 The calculated ticker value is output to `{bucket}/{STAGE}/{campaign_name}.json`.
 
-This file is cached behind fastly in both CODE and PROD, e.g [https://support.theguardian.com/ticker/US_2022.json](https://support.theguardian.com/US_2022.json).
+This file is cached behind fastly in both CODE and PROD, e.g [https://support.theguardian.com/ticker/US_2022.json](https://support.theguardian.com/ticker/US_2022.json).
 
 ### Config
 
