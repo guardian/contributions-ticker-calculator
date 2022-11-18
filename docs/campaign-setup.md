@@ -1,8 +1,8 @@
 # Setting up a campaign
 
-## Creating a ticker campaign
+## Creating a new ticker campaign
 
-### Add a cloudwatch event
+### 1. Add a cloudwatch event
 In the [cloudformation.yaml](../src/value-ticker/cloudformation.yaml), add a scheduled event for the new campaign name. E.g. for `US_2022`:
 
 ```
@@ -21,7 +21,7 @@ In the [cloudformation.yaml](../src/value-ticker/cloudformation.yaml), add a sch
 
 This is a code change and requires a riff-raff deploy.
 
-### Update the ticker config
+### 2. Update the ticker config
 
 Config is defined in an S3 file in the membership-private bucket, under `/{STAGE}/ticker.conf.json`.
 
