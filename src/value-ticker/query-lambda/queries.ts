@@ -50,18 +50,29 @@ const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryC
     'acquisition_events_secondMonthlyQuery'
 );
 
+const supporterCountQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
+    'SELECT COUNT(*) ' +
+        `FROM ${tableName} ` +
+        `WHERE countryCode = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
+        (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
+        `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' `,
+    'acquisition_events_full'
+);
+
 /**
  * If a campaign runs for more than a month then double any monthly contributions received before the final month.
  * This logic assumes campaigns will not run for more than 2 months.
  */
 export function getQueries(startDate: Moment, endDate: Moment, countryCode: string, currency: string, stage: string, campaignCode?: string): Query[] {
-    const oneMonthBeforeEnd = endDate.clone().subtract(1, 'month');
+    // const oneMonthBeforeEnd = endDate.clone().subtract(1, 'month');
     const tableName = `acquisition_events_${stage.toLowerCase()}`;
 
-    if (oneMonthBeforeEnd.isAfter(startDate)) return [
-        oneOffAndAnnuallyQuery(startDate, countryCode, currency, tableName, campaignCode),
-        firstMonthlyQuery(startDate, oneMonthBeforeEnd, countryCode, currency, tableName, campaignCode),
-        secondMonthlyQuery(endDate, oneMonthBeforeEnd, countryCode, currency, tableName, campaignCode)
-    ];
-    else return [fullQuery(startDate, countryCode, currency, tableName, campaignCode)];
+    // if (oneMonthBeforeEnd.isAfter(startDate)) return [
+    //     oneOffAndAnnuallyQuery(startDate, countryCode, currency, tableName, campaignCode),
+    //     firstMonthlyQuery(startDate, oneMonthBeforeEnd, countryCode, currency, tableName, campaignCode),
+    //     secondMonthlyQuery(endDate, oneMonthBeforeEnd, countryCode, currency, tableName, campaignCode)
+    // ];
+    // else return [fullQuery(startDate, countryCode, currency, tableName, campaignCode)];
+    return [supporterCountQuery(startDate, countryCode, currency, tableName, campaignCode)]
 }
