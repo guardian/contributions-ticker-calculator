@@ -211,25 +211,25 @@ Resources:
   ScheduleUS:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub contributions-ticker-calculator-schedule-US_2022-${Stage}
+      Name: !Sub contributions-ticker-calculator-schedule-US-${Stage}
       ScheduleExpression: !Sub cron(${CronExpression})
       State: !Ref ScheduleState
       Targets:
         - Arn: !Ref StateMachine
           RoleArn: !GetAtt TriggerExecutionRole.Arn
           Id: !GetAtt StateMachine.Name
-          Input: '{ "Name": "US_2022" }'
+          Input: '{ "Name": "US" }'
   ScheduleAU:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub contributions-ticker-calculator-schedule-AU_2022-${Stage}
+      Name: !Sub contributions-ticker-calculator-schedule-AU-${Stage}
       ScheduleExpression: !Sub cron(${CronExpression})
       State: !Ref ScheduleState
       Targets:
         - Arn: !Ref StateMachine
           RoleArn: !GetAtt TriggerExecutionRole.Arn
           Id: !GetAtt StateMachine.Name
-          Input: '{ "Name": "AU_2022" }'
+          Input: '{ "Name": "AU" }'
 
   ExecutionFailureAlarm:
     Type: AWS::CloudWatch::Alarm

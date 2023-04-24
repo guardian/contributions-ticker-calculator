@@ -3,20 +3,20 @@
 ## Creating a new ticker campaign
 
 ### 1. Add a cloudwatch event
-In the [cloudformation.yaml](../src/value-ticker/cloudformation.yaml), add a scheduled event for the new campaign name. E.g. for `US_2022`:
+In the [cloudformation.yaml](../src/value-ticker/cloudformation.yaml), add a scheduled event for the new campaign name. E.g. for `US`:
 
 ```
   ScheduleUS:
     Type: AWS::Events::Rule
     Properties:
-      Name: !Sub contributions-ticker-calculator-schedule-US_2022-${Stage}
+      Name: !Sub contributions-ticker-calculator-schedule-US-${Stage}
       ScheduleExpression: !Sub cron(${CronExpression})
       State: !Ref ScheduleState
       Targets:
         - Arn: !Ref StateMachine
           RoleArn: !GetAtt TriggerExecutionRole.Arn
           Id: !GetAtt StateMachine.Name
-          Input: '{ "Name": "US_2022" }'
+          Input: '{ "Name": "US" }'
 ```
 
 This is a code change and requires a riff-raff deploy.
