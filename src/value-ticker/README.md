@@ -16,7 +16,7 @@ Events from this stream are processed by the [acquisitions-firehose-transformer]
 
 The calculated ticker value is output to `{bucket}/{STAGE}/{campaign_name}.json`.
 
-This file is cached behind fastly in both CODE and PROD, e.g [https://support.theguardian.com/ticker/US_2022.json](https://support.theguardian.com/ticker/US_2022.json).
+This file is cached behind fastly in both CODE and PROD, e.g [https://support.theguardian.com/ticker/US.json](https://support.theguardian.com/ticker/US.json).
 
 ### Config
 
@@ -32,4 +32,4 @@ Trigger a one-off run from the Step Functions console page (`contributions-ticke
 
 The state machine takes a `Name` parameter, e.g:
 
-`{ "Name": "US_2022" }`
+`{ "Name": "US" }`
