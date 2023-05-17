@@ -50,11 +50,10 @@ const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryC
     'acquisition_events_secondMonthlyQuery'
 );
 
-const supporterCountQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
+const supporterCountQuery = (startDate: Moment, countryCode: string, tableName: string, campaignCode?: string) => new Query(
     'SELECT COUNT(*) ' +
         `FROM ${tableName} ` +
         `WHERE countryCode = '${countryCode}' ` +
-        `AND currency = '${currency}' ` +
         (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' `,
     'acquisition_events_full'
@@ -74,5 +73,5 @@ export function getQueries(startDate: Moment, endDate: Moment, countryCode: stri
     //     secondMonthlyQuery(endDate, oneMonthBeforeEnd, countryCode, currency, tableName, campaignCode)
     // ];
     // else return [fullQuery(startDate, countryCode, currency, tableName, campaignCode)];
-    return [supporterCountQuery(startDate, countryCode, currency, tableName, campaignCode)]
+    return [supporterCountQuery(startDate, countryCode, tableName, campaignCode)]
 }
