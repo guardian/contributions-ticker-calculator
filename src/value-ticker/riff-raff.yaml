@@ -1,6 +1,8 @@
 stacks: [support]
 regions: [eu-west-1]
-
+allowedStages:
+  - CODE
+  - PROD
 deployments:
   contributions-ticker-calculator:
     type: aws-lambda
@@ -15,4 +17,4 @@ deployments:
     type: cloud-formation
     app: contributions-ticker-calculator
     parameters:
-      templatePath: cloudformation/cloudformation.yaml
+      templatePath: cloudformation.yaml

@@ -11,14 +11,12 @@
     "moment": "2.22.2"
   },
   "devDependencies": {
-    "@types/node": "10.14.22",
-    "node-riffraff-artefact": "^2.0.1"
+    "@types/node": "10.14.22"
   },
   "scripts": {
     "clean": "rm -rf target",
     "build": "tsc",
     "query-local": "node target/value-ticker/query-lambda/local.js",
-    "calculate-local": "node target/value-ticker/calculate-lambda/local.js",
-    "package": "ARTEFACT_PATH=$PWD/target VERBOSE=true riffraff-artefact"
+    "calculate-local": "node target/value-ticker/calculate-lambda/local.js"
   }
 }
