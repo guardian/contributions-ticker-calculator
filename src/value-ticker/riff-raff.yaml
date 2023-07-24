@@ -6,6 +6,8 @@ allowedStages:
 deployments:
   contributions-ticker-calculator:
     type: aws-lambda
+    dependencies:
+      - contributions-ticker-calculator-cloudformation
     parameters:
       prefixStack: false
       bucket: membership-dist
