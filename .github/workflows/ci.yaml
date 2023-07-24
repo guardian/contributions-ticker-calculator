@@ -27,7 +27,7 @@ jobs:
           cache: "yarn"
           cache-dependency-path: |
             src/value-ticker/yarn.lock
-          node-version: 12.x
+          node-version: 18.x
       - name: Copy libs
         # So that we can share the code in lib between sub-projects.
         # TODO - can we do better than this? Does yarn workspaces help?
