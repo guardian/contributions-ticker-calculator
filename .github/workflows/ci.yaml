@@ -22,7 +22,7 @@ jobs:
       - name: Show env (helpful for debugging)
         run: env
       - name: Setup Node
-        uses: guardian/actions-setup-node@v2.4.1
+        uses: actions/setup-node@v3
         with:
           cache: "yarn"
           cache-dependency-path: |
