@@ -22,12 +22,12 @@ jobs:
       - name: Show env (helpful for debugging)
         run: env
       - name: Setup Node
-        uses: guardian/actions-setup-node@v2.4.1
+        uses: actions/setup-node@v3
         with:
+          node-version-file: '.nvmrc'
           cache: "yarn"
           cache-dependency-path: |
             src/value-ticker/yarn.lock
-          node-version: 18.x
       - name: Copy libs
         # So that we can share the code in lib between sub-projects.
         # TODO - can we do better than this? Does yarn workspaces help?
