@@ -37,7 +37,7 @@ export async function handler(event: CalculateLambdaEvent): Promise<ManagedUploa
 
 const reduce = (config: Config): QueryReduce => (queryResults: GetQueryResultsOutput[]) => {
     const amounts: number[] = queryResults.map((result: GetQueryResultsOutput) => {
-        const value = parseFloat(result.ResultSet.Rows[1].Data[0].VarCharValue);
+        const value = Math.round(parseFloat(result.ResultSet.Rows[1].Data[0].VarCharValue));
         if (value) return value;
         else {
             //This will happen if there are no results for this particular query
@@ -46,7 +46,7 @@ const reduce = (config: Config): QueryReduce => (queryResults: GetQueryResultsOu
         }
     });
 
-    const total = amounts.reduce((sum, v) => sum + v) + config.InitialAmount;
+    const total = Math.round(amounts.reduce((sum, v) => sum + v) + config.InitialAmount);
 
     return {
         total,
