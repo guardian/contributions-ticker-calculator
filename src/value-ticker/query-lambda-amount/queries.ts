@@ -8,56 +8,48 @@ const partitionDateField = 'acquisition_date';
 
 const fullQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
     'SELECT SUM(amount) ' +
-    `FROM ${tableName} ` +
-    `WHERE countryCode = '${countryCode}' ` +
-    `AND currency = '${currency}' ` +
-    (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
-    `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' `,
+        `FROM ${tableName} ` +
+        `WHERE countryCode = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
+        (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
+        `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' `,
     'acquisition_events_full'
 );
 
 const oneOffAndAnnuallyQuery = (startDate: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
     'SELECT SUM(amount) ' +
-    `FROM ${tableName} ` +
-    `WHERE countryCode = '${countryCode}' ` +
-    `AND currency = '${currency}' ` +
-    (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
-    `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
-    `AND paymentFrequency IN ('ONE_OFF', 'ANNUALLY')`,
+        `FROM ${tableName} ` +
+        `WHERE countryCode = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
+        (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
+        `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
+        `AND paymentFrequency IN ('ONE_OFF', 'ANNUALLY')`,
     'acquisition_events_oneOffAndAnnually'
 );
 
 const firstMonthlyQuery = (startDate: Moment, oneMonthBeforeEnd: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
     'SELECT SUM(amount)*2 ' +
-    `FROM ${tableName} ` +
-    `WHERE countryCode = '${countryCode}' ` +
-    `AND currency = '${currency}' ` +
-    (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
-    `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
-    `AND ${partitionDateField} < date'${formatDateTime(oneMonthBeforeEnd)}' ` +
-    `AND paymentFrequency='MONTHLY'`,
+        `FROM ${tableName} ` +
+        `WHERE countryCode = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
+        (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
+        `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' ` +
+        `AND ${partitionDateField} < date'${formatDateTime(oneMonthBeforeEnd)}' ` +
+        `AND paymentFrequency='MONTHLY'`,
     'acquisition_events_firstMonthlyQuery'
 );
 
 const secondMonthlyQuery = (endDate: Moment, oneMonthBeforeEnd: Moment, countryCode: string, currency: string, tableName: string, campaignCode?: string) => new Query(
     'SELECT SUM(amount) ' +
-    `FROM ${tableName} ` +
-    `WHERE countryCode = '${countryCode}' ` +
-    `AND currency = '${currency}' ` +
-    (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
-    `AND ${partitionDateField} >= date'${formatDateTime(oneMonthBeforeEnd)}' ` +
-    `AND paymentFrequency='MONTHLY'`,
+        `FROM ${tableName} ` +
+        `WHERE countryCode = '${countryCode}' ` +
+        `AND currency = '${currency}' ` +
+        (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
+        `AND ${partitionDateField} >= date'${formatDateTime(oneMonthBeforeEnd)}' ` +
+        `AND paymentFrequency='MONTHLY'`,
     'acquisition_events_secondMonthlyQuery'
 );
 
-// const supporterCountQuery = (startDate: Moment, countryCode: string, tableName: string, campaignCode?: string) => new Query(
-//     'SELECT COUNT(*) ' +
-//         `FROM ${tableName} ` +
-//         `WHERE countryCode = '${countryCode}' ` +
-//         (campaignCode ? `AND campaignCode = '${campaignCode}' ` : '') +
-//         `AND ${partitionDateField} >= date'${formatDateTime(startDate)}' `,
-//     'acquisition_events_full'
-// );
 
 /**
  * If a campaign runs for more than a month then double any monthly contributions received before the final month.
@@ -73,5 +65,4 @@ export function getQueries(startDate: Moment, endDate: Moment, countryCode: stri
         secondMonthlyQuery(endDate, oneMonthBeforeEnd, countryCode, currency, tableName, campaignCode)
     ];
     else return [fullQuery(startDate, countryCode, currency, tableName, campaignCode)];
-    // return [supporterCountQuery(startDate, countryCode, tableName, campaignCode)]
 }
