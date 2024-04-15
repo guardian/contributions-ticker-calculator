@@ -20,19 +20,31 @@ const tickerBucket = process.env.TickerBucket
 export interface CalculateLambdaEvent {
     ExecutionIds: QueryExecutionId[];
     Name: string;
+1    Query: string;
 }
 
 export async function handler(event: CalculateLambdaEvent): Promise<ManagedUpload.SendData> {
     console.log({event});
     const config: Config = (await getConfig(stage))[event.Name];
+    if (event.Query === "AmountQuery") {
+        return reduceAndWrite(
+            event.ExecutionIds,
+            reduce(config),
+            tickerBucket,
+            `${stage}/${event.Name}/Amount.json`,
+            athena
+        );
+    }
+    else {
+        return reduceAndWrite(
+            event.ExecutionIds,
+            reduce(config),
+            tickerBucket,
+            `${stage}/${event.Name}/SupporterCount.json`,
+            athena
+        );
+    }
 
-    return reduceAndWrite(
-        event.ExecutionIds,
-        reduce(config),
-        tickerBucket,
-        `${stage}/${event.Name}.json`,
-        athena
-    );
 }
 
 const reduce = (config: Config): QueryReduce => (queryResults: GetQueryResultsOutput[]) => {
