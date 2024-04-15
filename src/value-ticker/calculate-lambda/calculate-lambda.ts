@@ -20,7 +20,7 @@ const tickerBucket = process.env.TickerBucket
 export interface CalculateLambdaEvent {
     ExecutionIds: QueryExecutionId[];
     Name: string;
-1    Query: string;
+    Query: string;
 }
 
 export async function handler(event: CalculateLambdaEvent): Promise<ManagedUpload.SendData> {

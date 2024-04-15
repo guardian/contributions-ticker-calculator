@@ -39,5 +39,6 @@ export async function handler(event: QueryLambdaEvent): Promise<CalculateLambdaE
         .then(executionIds => ({
             ExecutionIds: executionIds,
             Name: event.Name,
+            Query: "AmountQuery",
         }));
 }
