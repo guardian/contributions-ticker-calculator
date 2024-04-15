@@ -1,9 +1,9 @@
-import { handler } from './calculate-lambda';
+import { handler } from './query-lambda-amount';
 let AWS = require('aws-sdk');
 
 /**
  * For testing locally:
- * `yarn run calculate-local <name> <execution id>,<execution id>,...`
+ * `yarn run query-local`
  */
 
 AWS.config = new AWS.Config();
@@ -12,14 +12,10 @@ AWS.config.secretAccessKey = process.env.AWS_SECRET_ACCESS_KEY;
 AWS.config.sessionToken = process.env.AWS_SESSION_TOKEN;
 AWS.config.region = "eu-west-1";
 
-async function run(name: string, ids: string, query:string) {
-    await handler({
-        Name: name,
-        ExecutionIds: ids.split(','),
-        Query : "AmountQuery"
-    })
+async function run() {
+    await handler({ Name: 'US' })
         .then(result => console.log(`Result: ${JSON.stringify(result)}`))
         .catch(err => console.log(`Error: ${err}`))
 }
 
-run(process.argv[2], process.argv[3],process.argv[4]);
+run();
