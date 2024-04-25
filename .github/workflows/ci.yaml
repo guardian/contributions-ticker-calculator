@@ -44,13 +44,9 @@ jobs:
       - name: Zip target directory contents (quietly)
         run: zip -qr contributions-ticker-calculator.zip ./*
         working-directory: ./src/value-ticker/target
-      - name: Configure AWS credentials # needed by actions-riff-raff
-        uses: aws-actions/configure-aws-credentials@v4
+      - uses: guardian/actions-riff-raff@v4
         with:
-          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-          aws-region: eu-west-1
-      - uses: guardian/actions-riff-raff@v2
-        with:
+          roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
           projectName: Contributions::contributions-ticker-calculator
           configPath: ./src/value-ticker/riff-raff.yaml
           buildNumberOffset: 300
