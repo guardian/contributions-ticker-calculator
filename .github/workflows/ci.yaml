@@ -13,6 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # needed by actions-riff-raff
+      pull-requests: write
     defaults:
       run:
         working-directory: ./src/value-ticker
