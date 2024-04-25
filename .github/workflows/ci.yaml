@@ -47,6 +47,7 @@ jobs:
       - uses: guardian/actions-riff-raff@v4
         with:
           roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
           projectName: Contributions::contributions-ticker-calculator
           configPath: ./src/value-ticker/riff-raff.yaml
           buildNumberOffset: 300
