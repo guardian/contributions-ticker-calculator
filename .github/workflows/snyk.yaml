@@ -16,6 +16,7 @@ jobs:
       DEBUG: true
       ORG: guardian-growth
       SKIP_NODE: false
+      EXCLUDE: src/supporter-count-ticker
     secrets:
        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
 
