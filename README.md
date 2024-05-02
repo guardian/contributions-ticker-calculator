@@ -1,6 +1,6 @@
 # contributions-ticker-calculator
 
-This repo contains two stacks:
+See [`value-ticker` readme](./src/value-ticker/README.md)
 
-1. value-ticker - this is for counting money. See [readme](./src/value-ticker/README.md)
-2. supporter-count-ticker - this is for counting supporters. **The supporter-count-ticker no longer works in its current state. It was built to query the old datalake in AWS. It will have to be migrated to use BigQuery if we are to use it again.**
+
+**Note** - historically this repo also contained the `supporter-count-ticker`. This has not been used for a long time and was built to query the old datalake in AWS, and so the code has been removed.
