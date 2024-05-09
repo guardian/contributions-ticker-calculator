@@ -47,6 +47,7 @@ Parameters:
   SNSTopicForAlerts:
     Description: Name of the SNS topic for alerts
     Type: String
+    Default: alarms-handler-topic-PROD
 
 Conditions:
   IsProd: !Equals [!Ref "Stage", "PROD"]
@@ -249,4 +250,7 @@ Resources:
       Period: 900
       EvaluationPeriods: 2
       Statistic: Sum
+      Tags:
+        - Key: App
+          Value: !Ref App
 
