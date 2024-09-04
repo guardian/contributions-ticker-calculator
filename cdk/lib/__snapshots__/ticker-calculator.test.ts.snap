@@ -90,7 +90,7 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
               ],
             },
             "Id": "Target0",
-            "Input": "{"Name":"US"}",
+            "Input": ""US"",
           },
         ],
       },

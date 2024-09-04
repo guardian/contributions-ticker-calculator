@@ -19,7 +19,7 @@ export class TickerCalculator extends GuStack {
 						{
 							schedule: Schedule.rate(Duration.minutes(15)),
 							description: 'US',
-							input: RuleTargetInput.fromObject({ 'Name': 'US' })
+							input: RuleTargetInput.fromText('US'),
 						}
 					];
 
