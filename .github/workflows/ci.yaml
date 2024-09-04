@@ -74,7 +74,7 @@ jobs:
                     CODE: TickerCalculator-CODE.template.json
                     PROD: TickerCalculator-PROD.template.json
                   cloudFormationStackByTags: false
-                  prependStackToCloudFormationStackName: false
+                  prependStackToCloudFormationStackName: true
 
               ticker-calculator:
                 type: aws-lambda
