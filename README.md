@@ -8,8 +8,8 @@ This file is cached behind fastly in both CODE and PROD, e.g https://support.the
 
 ### Config
 
-The lambda takes a Name parameter as an input, to tell it which campaign name to run for.
+The lambda takes the name of a campaign as its input, to tell it which campaign config to use.
 
 The stack defines a cloudwatch event for each campaign.
 
-The ticker config is loaded by the lambdas from a ticker.conf.json file in S3. This file contains config for each campaign (see example).
+The ticker config is loaded by the lambda from Parameter Store. This file contains config for each campaign [src/ticker.conf.json](see example).
