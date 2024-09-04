@@ -7,16 +7,14 @@ on:
     branches:
       - main
 jobs:
-  build_value-ticker:
+  build_ticker-calculator:
     if: github.repository_owner == 'guardian'
     name: Build ticker-calculator
     runs-on: ubuntu-latest
     permissions:
       id-token: write # needed by actions-riff-raff
       pull-requests: write
-    defaults:
-      run:
-        working-directory: ./src/value-ticker
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
