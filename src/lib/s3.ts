@@ -1,25 +1,14 @@
-const AWS = require('aws-sdk');
-import { GetObjectOutput } from 'aws-sdk/clients/s3';
+import * as AWS from 'aws-sdk';
+import type { ManagedUpload } from "aws-sdk/lib/s3/managed_upload";
 
-const S3 = new AWS.S3();
+function writeToS3(data: Record<string, unknown>, bucket: string, key: string): Promise<ManagedUpload.SendData> {
+    const s3 = new AWS.S3();
 
-export const getConfig = (stage: string) => {
-    const Bucket = 'membership-private';
-    const Key = `${stage}/ticker.conf.json`;
-
-    return S3.getObject({
-        Bucket,
-        Key,
-    })
-        .promise()
-        .then((result: GetObjectOutput) => {
-            if (result.Body) {
-                return JSON.parse(result.Body.toString());
-            } else {
-                return Promise.reject(
-                    new Error(`Missing Body in S3 response for ${Bucket}/${Key}`),
-                );
-            }
-        })
-        .catch(err => Promise.reject(`Failed to fetch S3 object ${Bucket}/${Key}: ${err}`));
+    return s3.upload({
+        Bucket: bucket,
+        Key: key,
+        Body: JSON.stringify(data),
+        ACL: 'public-read',
+        CacheControl: 'max-age=300'
+    }).promise();
 }

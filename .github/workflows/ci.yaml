@@ -1,4 +1,4 @@
-name: Build contributions-ticker-calculator
+name: Build ticker-calculator
 on:
   pull_request:
     branches:
@@ -9,7 +9,7 @@ on:
 jobs:
   build_value-ticker:
     if: github.repository_owner == 'guardian'
-    name: Build contributions-ticker-calculator
+    name: Build ticker-calculator
     runs-on: ubuntu-latest
     permissions:
       id-token: write # needed by actions-riff-raff
@@ -20,40 +20,74 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-      - name: Show env (helpful for debugging)
-        run: env
+
       - name: Setup Node
         uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
-          cache: "yarn"
-          cache-dependency-path: |
-            src/value-ticker/yarn.lock
-      - name: Copy libs
-        # So that we can share the code in lib between sub-projects.
-        # TODO - can we do better than this? Does yarn workspaces help?
-        run: cp ../lib/* .
-      - name: Install
-        run: yarn install
-      - name: Build
-        run: yarn run build
-      - name: Copy files to Riff Raff package
-        run: cp package.json riff-raff.yaml target
-      - name: Yarn install in package
-        working-directory: ./src/value-ticker/target
-        run: yarn install --production
-      - name: Zip target directory contents (quietly)
-        run: zip -qr contributions-ticker-calculator.zip ./*
-        working-directory: ./src/value-ticker/target
-      - uses: guardian/actions-riff-raff@v4
+
+      - name: build
+        run: |
+          npm install -g yarn
+          yarn install
+          yarn lint
+          yarn run build
+
+          cp package.json target
+          pushd target
+          yarn install --production
+          zip -r ticker-calculator ./*
+          popd
+
+      - name: Build cdk
+        working-directory: ./cdk
+        run: |
+          npm install -g yarn
+          yarn install
+          yarn lint
+          yarn test
+          yarn synth
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
-          githubToken: ${{ secrets.GITHUB_TOKEN }}
-          projectName: Contributions::contributions-ticker-calculator
-          configPath: ./src/value-ticker/riff-raff.yaml
-          buildNumberOffset: 300
+          role-to-assume: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          aws-region: eu-west-1
+
+      - name: riff-raff
+        uses: guardian/actions-riff-raff@v2
+        with:
+          app: ticker-calculator
+          config: |
+            stacks:
+              - support
+            regions:
+              - eu-west-1
+            allowedStages:
+              - CODE
+              - PROD
+            deployments:
+              ticker-calculator-cloudformation:
+                type: cloud-formation
+                app: ticker-calculator
+                parameters:
+                  cloudFormationStackName: ticker-calculator
+                  templateStagePaths:
+                    CODE: TickerCalculator-CODE.template.json
+                    PROD: TickerCalculator-PROD.template.json
+                  cloudFormationStackByTags: false
+                  prependStackToCloudFormationStackName: false
+
+              ticker-calculator:
+                type: aws-lambda
+                parameters:
+                  prefixStack: false
+                  fileName: ticker-calculator.zip
+                  functionNames:
+                    - ticker-calculator-
           contentDirectories: |
-            contributions-ticker-calculator:
-              - ./src/value-ticker/target/contributions-ticker-calculator.zip
-            contributions-ticker-calculator-cloudformation:
-              - ./src/value-ticker/cloudformation.yaml
+            ticker-calculator:
+              - target/ticker-calculator.zip
+            ticker-calculator-cloudformation:
+              - cdk/cdk.out/TickerCalculator-CODE.template.json
+              - cdk/cdk.out/TickerCalculator-PROD.template.json

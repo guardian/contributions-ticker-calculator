@@ -75,6 +75,9 @@ export class TickerCalculator extends GuStack {
 			fileName: `${AppName}.zip`,
 			rules: scheduleRules,
 			role,
+			environment: {
+				Stage: this.stage,
+			},
 			monitoringConfiguration:
 				this.stage === 'PROD'
 					? {
