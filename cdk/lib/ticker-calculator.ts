@@ -1,9 +1,10 @@
 import { GuScheduledLambda } from '@guardian/cdk';
 import type { GuStackProps } from '@guardian/cdk/lib/constructs/core';
 import { GuStack, GuStringParameter } from '@guardian/cdk/lib/constructs/core';
+import type {GuScheduledLambdaProps} from "@guardian/cdk/lib/patterns/scheduled-lambda";
 import type { App } from 'aws-cdk-lib';
 import { Duration } from 'aws-cdk-lib';
-import { Schedule } from 'aws-cdk-lib/aws-events';
+import {RuleTargetInput, Schedule} from 'aws-cdk-lib/aws-events';
 import { PolicyStatement, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam';
 import { Runtime } from 'aws-cdk-lib/aws-lambda';
 
@@ -20,11 +21,18 @@ export class TickerCalculator extends GuStack {
 			allowedValues: ['ENABLED', 'DISABLED'],
 		});
 
-		const scheduleRules =
+		const scheduleRules: GuScheduledLambdaProps['rules'] =
 			scheduleState.valueAsString === 'ENABLED'
 				? [
 						{
 							schedule: Schedule.rate(Duration.minutes(15)),
+							description: 'US',
+							input: RuleTargetInput.fromObject({ 'Name': 'US' })
+						},
+						{
+							schedule: Schedule.rate(Duration.minutes(15)),
+							description: 'AU',
+							input: RuleTargetInput.fromObject({ 'Name': 'AU' })
 						},
 					]
 				: [];

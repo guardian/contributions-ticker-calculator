@@ -358,10 +358,10 @@
   resolved "https://registry.yarnpkg.com/@eslint/js/-/js-8.57.0.tgz#a5417ae8427873f1dd08b70b3574b453e67b5f7f"
   integrity sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==
 
-"@guardian/cdk@59.3.1":
-  version "59.3.1"
-  resolved "https://registry.yarnpkg.com/@guardian/cdk/-/cdk-59.3.1.tgz#cc841e28186959e64c34585d8eaa16db4df76c49"
-  integrity sha512-Y6ZpDNuUpXGs2Rxaw8f4G3k507pqx42ZdVkRIRePIRIOPXNSZ03OEAfhMrc+n0M7kG3/JZYZsUNWCF5ihUy67w==
+"@guardian/cdk@59.3.3":
+  version "59.3.3"
+  resolved "https://registry.yarnpkg.com/@guardian/cdk/-/cdk-59.3.3.tgz#f0cf6605ccb146731fa2590f069d9da5fe7f7749"
+  integrity sha512-VnICids94t2PHrSzenbH1+PuYn52AGZO/S/wjq8Weayn4voiUP6RsZi9dyKyA8/C5cSQcKGVnhXR/Z8jXUx0vA==
   dependencies:
     "@oclif/core" "3.26.6"
     aws-sdk "^2.1687.0"
