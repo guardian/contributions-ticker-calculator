@@ -8,7 +8,8 @@ interface Config {
     CampaignCode?: string;
 }
 
-export async function handler(): Promise<void> {
+export async function handler(event): Promise<void> {
+    console.log(event);
     const stage = process.env.Stage;
     if (!stage || (stage !== 'CODE' && stage !== 'PROD')) {
         return Promise.reject(`Invalid or missing stage: '${stage ?? ''}'`);
