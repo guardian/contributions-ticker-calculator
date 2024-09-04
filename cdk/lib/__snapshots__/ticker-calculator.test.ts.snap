@@ -4,7 +4,6 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
 {
   "Metadata": {
     "gu:cdk:constructs": [
-      "GuStringParameter",
       "GuDistributionBucketParameter",
       "GuScheduledLambda",
     ],
@@ -15,15 +14,6 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
       "Default": "/account/services/artifact.bucket",
       "Description": "SSM parameter containing the S3 bucket name holding distribution artifacts",
       "Type": "AWS::SSM::Parameter::Value<String>",
-    },
-    "ScheduleState": {
-      "AllowedValues": [
-        "ENABLED",
-        "DISABLED",
-      ],
-      "Default": "ENABLED",
-      "Description": "The state of the schedule",
-      "Type": "String",
     },
   },
   "Resources": {
@@ -44,12 +34,13 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
             "APP": "ticker-calculator",
             "STACK": "support",
             "STAGE": "TEST",
+            "Stage": "TEST",
           },
         },
         "FunctionName": "ticker-calculator-TEST",
         "Handler": "lambda.handler",
         "LoggingConfig": {
-          "LogFormat": "JSON",
+          "LogFormat": "Text",
         },
         "MemorySize": 512,
         "Role": {
@@ -84,6 +75,45 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
         "Timeout": 30,
       },
       "Type": "AWS::Lambda::Function",
+    },
+    "TickerCalculatorTickerCalculatorrate15minutes0A13A653E": {
+      "Properties": {
+        "Description": "US",
+        "ScheduleExpression": "rate(15 minutes)",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "TickerCalculator5AB41211",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "Input": ""US"",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
+    "TickerCalculatorTickerCalculatorrate15minutes0AllowEventRuleTickerCalculator3A61D8F5E0A4FFD1": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "TickerCalculator5AB41211",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "TickerCalculatorTickerCalculatorrate15minutes0A13A653E",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
     },
     "querylambdaroleC6C8A94B": {
       "Properties": {
