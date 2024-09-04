@@ -8,7 +8,7 @@ interface Config {
     CampaignCode?: string;
 }
 
-export async function handler(event): Promise<void> {
+export async function handler(event: Record<string,unknown>): Promise<void> {
     console.log(event);
     const stage = process.env.Stage;
     if (!stage || (stage !== 'CODE' && stage !== 'PROD')) {
