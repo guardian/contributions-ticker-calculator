@@ -9,7 +9,7 @@ interface Config {
 }
 
 export async function handler(campaignName: string): Promise<void> {
-    console.log('Event: ', campaignName);
+    console.log('campaignName: ', campaignName);
     const stage = process.env.Stage;
     if (!stage || (stage !== 'CODE' && stage !== 'PROD')) {
         return Promise.reject(`Invalid or missing stage: '${stage ?? ''}'`);
