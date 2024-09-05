@@ -58,7 +58,7 @@ export const runQuery = async (
                 FROM reader_revenue.fact_holding_acquisition
                 WHERE acquired_date >= '${config.StartDate}'
                 AND reader_revenue_product IN ('Supporter Plus', 'Tier Three')
-                AND currency = '${config.Currency}'
+                AND transaction_currency = '${config.Currency}'
                 AND country_code = '${config.CountryCode}'
             )
             SELECT SUM(amount) FROM (
