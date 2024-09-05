@@ -1,12 +1,6 @@
-import { getSSMParam } from "./lib/ssm";
-
-interface Config {
-    StartDate: string;
-    EndDate: string;
-    CountryCode: string;
-    Currency: string;
-    CampaignCode?: string;
-}
+import {buildAuthClient, runQuery} from './lib/bigquery';
+import type {TickerConfig} from './lib/models';
+import { getSSMParam } from './lib/ssm';
 
 export async function handler(campaignName: string): Promise<void> {
     console.log('campaignName: ', campaignName);
@@ -16,11 +10,15 @@ export async function handler(campaignName: string): Promise<void> {
     }
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- config
-    const tickerConfig: Record<string,Config> = JSON.parse(await getSSMParam('ticker-config', stage));
+    const tickerConfig: Record<string,TickerConfig> = JSON.parse(await getSSMParam('ticker-config', stage));
     const gcpConfig = await getSSMParam('gcp-wif-credentials-config', stage);
 
     const campaignConfig = tickerConfig[campaignName];
     console.log('Using config:', campaignConfig);
+
+    const authClient = await buildAuthClient(gcpConfig);
+    const result = await runQuery(authClient, stage, campaignConfig);
+    console.log(result);
 
     // TODO - implement
     return Promise.resolve();
