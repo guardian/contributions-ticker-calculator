@@ -61,7 +61,7 @@ export const runQuery = async (
                 AND transaction_currency = '${config.Currency}'
                 AND country_code = '${config.CountryCode}'
             )
-            SELECT SUM(amount) FROM (
+            SELECT SUM(amount) AS amount FROM (
                 SELECT amount FROM supporter_plus_and_tier_three UNION ALL
                 SELECT amount FROM single_contribs UNION ALL
                 SELECT amount FROM annual_contribs UNION ALL
