@@ -1,6 +1,7 @@
 import { BigQuery } from '@google-cloud/bigquery';
 import type { BaseExternalAccountClient, ExternalAccountClientOptions } from 'google-auth-library';
 import { ExternalAccountClient } from 'google-auth-library';
+import { z } from 'zod';
 import type { TickerConfig } from './models';
 
 export const buildAuthClient = (clientConfig: string): Promise<BaseExternalAccountClient> => new Promise((resolve, reject) => {
@@ -12,6 +13,12 @@ export const buildAuthClient = (clientConfig: string): Promise<BaseExternalAccou
         reject('Failed to create Google Auth Client');
     }
 });
+
+export const BigQueryResultDataSchema = z.array(
+    z.object({
+        amount: z.number(),
+    })
+);
 
 export const runQuery = async (
     authClient: BaseExternalAccountClient,
@@ -71,15 +78,12 @@ export const runQuery = async (
     );
 
     console.log('result: ', result);
-    if (result[0][0]) {
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access -- checked
-        const value = result[0][0]?.amount;
-        if (Number.isNaN(value)) {
-            console.log('NaN: ', value);
-            return 0;
-        }
-        // eslint-disable-next-line @typescript-eslint/no-unsafe-return -- checked for NaN
-        return value;
+    const resultData = BigQueryResultDataSchema.parse(result[0]);
+    if (resultData.length > 0) {
+        return resultData[0].amount;
+    } else {
+        console.log('No row found in result');
     }
+
     return 0;
 }

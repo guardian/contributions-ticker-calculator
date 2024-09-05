@@ -11,7 +11,8 @@
   "dependencies": {
     "aws-sdk": "^2.1177.0",
     "moment": "2.29.4",
-    "@google-cloud/bigquery": "^7.0.0"
+    "@google-cloud/bigquery": "^7.0.0",
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@guardian/eslint-config-typescript": "^1.0.2",
