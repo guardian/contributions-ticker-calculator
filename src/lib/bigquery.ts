@@ -42,7 +42,7 @@ export const runQuery = async (
             AND product IN ('CONTRIBUTION', 'RECURRING_CONTRIBUTION')
             AND (
                 payment_frequency IN ('ONE_OFF', 'ANNUALLY') OR
-                payment_frequency = 'MONTHLY' AND event_timestamp >= TIMESTAMP(DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH))
+                (payment_frequency = 'MONTHLY' AND event_timestamp >= TIMESTAMP(DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH)))
             )
             AND currency = '${config.Currency}'
             AND country_code = '${config.CountryCode}'
