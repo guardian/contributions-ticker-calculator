@@ -1,5 +1,5 @@
-import {buildAuthClient, runQuery} from './lib/bigquery';
-import type {TickerConfig} from './lib/models';
+import { buildAuthClient, runQuery } from './lib/bigquery';
+import type { TickerConfig } from './lib/models';
 import { getSSMParam } from './lib/ssm';
 
 export async function handler(campaignName: string): Promise<void> {
