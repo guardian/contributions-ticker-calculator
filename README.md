@@ -26,3 +26,5 @@ We also count acquisitions twice if the billing period is monthly and two paymen
 
 You can manually run the lambda in CODE by going to [the AWS console page](https://eu-west-1.console.aws.amazon.com/lambda/home?region=eu-west-1#/functions/ticker-calculator-CODE?tab=testing) and passing a campaign name as the input, e.g.
 `"US"`
+
+Note that the CODE lambda queries the CODE tables in BigQuery. If you need PROD data then you'll need to test with the PROD lambda.
