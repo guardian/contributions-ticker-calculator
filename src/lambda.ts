@@ -1,6 +1,9 @@
 import { buildAuthClient, runQuery } from './lib/bigquery';
-import type { TickerConfig } from './lib/models';
+import type {TickerConfig, TickerResult} from './lib/models';
+import { writeToS3 } from "./lib/s3";
 import { getSSMParam } from './lib/ssm';
+
+const TickerBucket = 'contributions-ticker';
 
 export async function handler(campaignName: string): Promise<void> {
     console.log('campaignName: ', campaignName);
@@ -17,9 +20,18 @@ export async function handler(campaignName: string): Promise<void> {
     console.log('Using config:', campaignConfig);
 
     const authClient = await buildAuthClient(gcpConfig);
-    const result = await runQuery(authClient, stage, campaignConfig);
-    console.log(result);
+    const amount = await runQuery(authClient, stage, campaignConfig);
 
-    // TODO - implement
-    return Promise.resolve();
+    const result: TickerResult = {
+        goal: campaignConfig.GoalAmount,
+        total: amount + campaignConfig.InitialAmount,
+    }
+    console.log('Writing result to S3:', result);
+
+    const s3Result = await writeToS3({
+        data: result,
+        bucket: TickerBucket,
+        key: `${stage}/${campaignName}.json`,
+    })
+    console.log('Result from S3: ', s3Result);
 }

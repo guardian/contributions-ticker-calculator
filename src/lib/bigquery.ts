@@ -77,13 +77,11 @@ export const runQuery = async (
         `
     );
 
-    console.log('result: ', result);
     const resultData = BigQueryResultDataSchema.parse(result[0]);
+    // We only expect one row in the result
     if (resultData.length > 0) {
         return resultData[0].amount;
-    } else {
-        console.log('No row found in result');
     }
 
-    return 0;
+    return Promise.reject('No data returned from BigQuery');
 }
