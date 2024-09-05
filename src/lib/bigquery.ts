@@ -30,52 +30,59 @@ export const runQuery = async (
         authClient,
     });
 
-    // TODO - count monthly more than once?
-    const result = await bigquery.query(
-        `
-            WITH single_contribs AS (
-                SELECT SUM(amount) AS amount
-                FROM datalake.fact_acquisition_event 
-                WHERE event_timestamp >= '${config.StartDate}'
-                AND product = 'CONTRIBUTION'
-                AND payment_frequency = 'ONE_OFF'
-                AND currency = '${config.Currency}'
-                AND country_code = '${config.CountryCode}'
-            ),
-            annual_contribs AS (
-                SELECT SUM(amount) AS amount
-                FROM datalake.fact_acquisition_event
-                WHERE event_timestamp >= '${config.StartDate}'
-                AND product = 'RECURRING_CONTRIBUTION'
-                AND payment_frequency = 'ANNUALLY'
-                AND currency = '${config.Currency}'
-                AND country_code = '${config.CountryCode}'
-            ),
-            monthly_contribs AS (
-                SELECT SUM(amount) AS amount
-                FROM datalake.fact_acquisition_event
-                WHERE event_timestamp >= '${config.StartDate}'
-                AND product = 'RECURRING_CONTRIBUTION'
-                AND payment_frequency = 'MONTHLY'
-                AND currency = '${config.Currency}'
-                AND country_code = '${config.CountryCode}'
-            ),
-            supporter_plus_and_tier_three AS (
-                SELECT SUM(first_payment_unit_price_transaction_currency) AS amount
-                FROM reader_revenue.fact_holding_acquisition
-                WHERE acquired_date >= '${config.StartDate}'
-                AND reader_revenue_product IN ('Supporter Plus', 'Tier Three')
-                AND transaction_currency = '${config.Currency}'
-                AND country_code = '${config.CountryCode}'
+    /**
+     * We count acquisitions twice if billing period is monthly and two payments will be made during the campaign.
+     * Assumes no campaign runs for more than 1 month.
+     */
+    const query = `
+        WITH contributions__once AS (
+            SELECT SUM(amount) AS amount
+            FROM datalake.fact_acquisition_event 
+            WHERE event_timestamp >= '${config.StartDate}'
+            AND product IN ('CONTRIBUTION', 'RECURRING_CONTRIBUTION')
+            AND (
+                payment_frequency IN ('ONE_OFF', 'ANNUALLY') OR
+                payment_frequency = 'MONTHLY' AND event_timestamp >= TIMESTAMP(DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH))
             )
-            SELECT SUM(amount) AS amount FROM (
-                SELECT amount FROM supporter_plus_and_tier_three UNION ALL
-                SELECT amount FROM single_contribs UNION ALL
-                SELECT amount FROM annual_contribs UNION ALL
-                SELECT amount  FROM monthly_contribs
-            )
-        `
-    );
+            AND currency = '${config.Currency}'
+            AND country_code = '${config.CountryCode}'
+        ),
+        contributions__twice AS (
+            SELECT SUM(amount)*2 AS amount
+            FROM datalake.fact_acquisition_event
+            WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < TIMESTAMP(DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH)
+            AND product = 'RECURRING_CONTRIBUTION'
+            AND payment_frequency = 'MONTHLY'
+            AND currency = '${config.Currency}'
+            AND country_code = '${config.CountryCode}'
+        ),
+        supporter_plus_or_tier_three__once AS (
+            SELECT SUM(first_payment_unit_price_transaction_currency) AS amount
+            FROM reader_revenue.fact_holding_acquisition
+            WHERE acquired_date >= '${config.StartDate}'
+            AND reader_revenue_product IN ('Supporter Plus', 'Tier Three')
+            AND (billing_period = 'Annual' OR acquired_date >= DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH))
+            AND transaction_currency = '${config.Currency}'
+            AND country_code = '${config.CountryCode}'
+        ),
+        supporter_plus_or_tier_three__twice AS (
+            SELECT SUM(first_payment_unit_price_transaction_currency)*2 AS amount
+            FROM reader_revenue.fact_holding_acquisition
+            WHERE acquired_date >= '${config.StartDate}' AND acquired_date < DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH)
+            AND reader_revenue_product IN ('Supporter Plus', 'Tier Three')
+            AND billing_period = 'Month'
+            AND transaction_currency = '${config.Currency}'
+            AND country_code = '${config.CountryCode}'
+        )
+        SELECT SUM(amount) AS amount FROM (
+            SELECT amount FROM contributions__once UNION ALL
+            SELECT amount FROM contributions__twice UNION ALL
+            SELECT amount FROM supporter_plus_or_tier_three__once UNION ALL
+            SELECT amount FROM supporter_plus_or_tier_three__twice
+        )
+    `;
+
+    const result = await bigquery.query(query);
 
     const resultData = BigQueryResultDataSchema.parse(result[0]);
     // We only expect one row in the result
