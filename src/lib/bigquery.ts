@@ -42,7 +42,7 @@ export const runQuery = async (
             AND product IN ('CONTRIBUTION', 'RECURRING_CONTRIBUTION')
             AND (
                 payment_frequency IN ('ONE_OFF', 'ANNUALLY') OR
-                (payment_frequency = 'MONTHLY' AND event_timestamp >= TIMESTAMP(DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH)))
+                (payment_frequency = 'MONTHLY' AND event_timestamp >= TIMESTAMP(DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)))
             )
             AND currency = '${config.Currency}'
             AND country_code = '${config.CountryCode}'
@@ -50,7 +50,7 @@ export const runQuery = async (
         contributions__twice AS (
             SELECT SUM(amount)*2 AS amount
             FROM datalake.fact_acquisition_event
-            WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < TIMESTAMP(DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH)
+            WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < TIMESTAMP(DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)
             AND product = 'RECURRING_CONTRIBUTION'
             AND payment_frequency = 'MONTHLY'
             AND currency = '${config.Currency}'
@@ -61,14 +61,14 @@ export const runQuery = async (
             FROM reader_revenue.fact_holding_acquisition
             WHERE acquired_date >= '${config.StartDate}'
             AND reader_revenue_product IN ('Supporter Plus', 'Tier Three')
-            AND (billing_period = 'Annual' OR acquired_date >= DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH))
+            AND (billing_period = 'Annual' OR acquired_date >= DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH))
             AND transaction_currency = '${config.Currency}'
             AND country_code = '${config.CountryCode}'
         ),
         supporter_plus_or_tier_three__twice AS (
             SELECT SUM(first_payment_unit_price_transaction_currency)*2 AS amount
             FROM reader_revenue.fact_holding_acquisition
-            WHERE acquired_date >= '${config.StartDate}' AND acquired_date < DATE_SUB('${config.StartDate}', INTERVAL 1 MONTH)
+            WHERE acquired_date >= '${config.StartDate}' AND acquired_date < DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)
             AND reader_revenue_product IN ('Supporter Plus', 'Tier Three')
             AND billing_period = 'Month'
             AND transaction_currency = '${config.Currency}'
