@@ -20,7 +20,7 @@ The lambda queries two tables:
 1. `fact_aquisition_event` for contributions. This table has live acquisitions data, and so contributions will be added to the ticker throughout the day.
 2. `fact_holding_acquisition` for SupporterPlus and ThreeTier. This table is only updated daily, so these acquisitions will only be added to the ticker once a day. This is because the `amount` isn't available in the live `fact_aquisition_event` table.
 
-We also count acquisitions twice if the billing period is monthly and two payments will be made during the campaign. This assumes no campaign runs for more than 1 month.
+We also count acquisitions twice if the billing period is monthly and two payments will be made during the campaign. This assumes no campaign runs for more than 2 months.
 
 ### Testing
 

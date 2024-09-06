@@ -32,7 +32,7 @@ export const runQuery = async (
 
     /**
      * We count acquisitions twice if billing period is monthly and two payments will be made during the campaign.
-     * Assumes no campaign runs for more than 1 month.
+     * Assumes no campaign runs for more than 2 months.
      */
     const query = `
         WITH contributions__once AS (
