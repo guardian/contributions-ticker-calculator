@@ -38,7 +38,7 @@ export const runQuery = async (
         WITH contributions__once AS (
             SELECT SUM(amount) AS amount
             FROM datalake.fact_acquisition_event 
-            WHERE event_timestamp >= '${config.StartDate}'
+            WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < '${config.EndDate}'
             AND product IN ('CONTRIBUTION', 'RECURRING_CONTRIBUTION')
             AND (
                 payment_frequency IN ('ONE_OFF', 'ANNUALLY') OR
@@ -59,7 +59,7 @@ export const runQuery = async (
         supporter_plus_or_tier_three__once AS (
             SELECT SUM(first_payment_unit_price_transaction_currency) AS amount
             FROM reader_revenue.fact_holding_acquisition
-            WHERE acquired_date >= '${config.StartDate}'
+            WHERE acquired_date >= '${config.StartDate}' AND acquired_date < '${config.EndDate}'
             AND reader_revenue_product IN ('Supporter Plus', 'Tier Three')
             AND (billing_period = 'Annual' OR acquired_date >= DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH))
             AND transaction_currency = '${config.Currency}'
@@ -81,6 +81,8 @@ export const runQuery = async (
             SELECT amount FROM supporter_plus_or_tier_three__twice
         )
     `;
+
+    console.log('Running query:', query);
 
     const result = await bigquery.query(query);
 
