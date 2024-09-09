@@ -50,7 +50,7 @@ export const runQuery = async (
         contributions__twice AS (
             SELECT SUM(amount)*2 AS amount
             FROM datalake.fact_acquisition_event
-            WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < TIMESTAMP(DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)
+            WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < TIMESTAMP(DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH))
             AND product = 'RECURRING_CONTRIBUTION'
             AND payment_frequency = 'MONTHLY'
             AND currency = '${config.Currency}'
