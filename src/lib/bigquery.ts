@@ -82,6 +82,8 @@ export const runQuery = async (
         )
     `;
 
+    console.log('Running query:', query);
+
     const result = await bigquery.query(query);
 
     const resultData = BigQueryResultDataSchema.parse(result[0]);
