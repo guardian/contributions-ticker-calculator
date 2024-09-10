@@ -24,7 +24,7 @@ export async function handler(campaignName: string): Promise<void> {
 
     const result: TickerResult = {
         goal: campaignConfig.GoalAmount,
-        total: amount + campaignConfig.InitialAmount,
+        total: Math.round(amount) + campaignConfig.InitialAmount,
     }
     console.log('Writing result to S3:', result);
 
