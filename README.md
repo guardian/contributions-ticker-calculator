@@ -1,8 +1,8 @@
 # ticker-calculator
 
-Counts money during a campaign and outputs to an S3 file. Used by epic/banner/thrashers.
+Counts money during a campaign and outputs to an S3 file. Used by epic/banner/thrashers and the support site landing page.
 
-The calculated ticker value is output to {bucket}/{STAGE}/{campaign_name}.json.
+The calculated ticker value is output to the bucket `contributions-ticker`, with key `{STAGE}/{campaign_name}.json`.
 
 This file is cached behind fastly in both CODE and PROD, e.g https://support.theguardian.com/ticker/US.json.
 
@@ -10,9 +10,9 @@ This file is cached behind fastly in both CODE and PROD, e.g https://support.the
 
 The lambda takes the name of a campaign as its input, to tell it which campaign config to use.
 
-The stack defines a cloudwatch event for each campaign.
+The stack defines a cloudwatch event for each campaign. The event is scheduled for every 15 minutes. Outside of campaigns, the schedule can be disabled manually from the AWS console.
 
-The ticker config is loaded by the lambda from Parameter Store. This file contains config for each campaign [src/ticker.conf.json](see example).
+The ticker config is loaded by the lambda from Parameter Store (key: `/ticker-calculator/{STAGE}/ticker-config`). This file contains config for each campaign [./src/ticker.conf.json](see example).
 
 ### Data
 
