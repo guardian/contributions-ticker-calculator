@@ -74,7 +74,7 @@ export const runQuery = async (
             AND transaction_currency = '${config.Currency}'
             AND country_code = '${config.CountryCode}'
         )
-        SELECT SUM(amount) AS amount FROM (
+        SELECT COALESCE(SUM(amount), 0) AS amount FROM (
             SELECT amount FROM contributions__once UNION ALL
             SELECT amount FROM contributions__twice UNION ALL
             SELECT amount FROM supporter_plus_or_tier_three__once UNION ALL
