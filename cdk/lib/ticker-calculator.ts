@@ -72,6 +72,7 @@ export class TickerCalculator extends GuStack {
 			environment: {
 				Stage: this.stage,
 			},
+			timeout: Duration.minutes(2),
 			loggingFormat: LoggingFormat.TEXT,
 			monitoringConfiguration:
 				this.stage === 'PROD'
