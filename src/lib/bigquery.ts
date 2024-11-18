@@ -73,12 +73,35 @@ export const runQuery = async (
             AND billing_period = 'Month'
             AND transaction_currency = '${config.Currency}'
             AND country_code = '${config.CountryCode}'
+        ),
+        iap_acquisitions__once AS (
+            SELECT SUM(amount) AS amount
+            FROM datalake.fact_acquisition_event 
+            WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < '${config.EndDate}'
+            AND product ='APP_PREMIUM_TIER'
+            AND (
+                payment_frequency IN ('ONE_OFF', 'ANNUALLY') OR
+                (payment_frequency = 'MONTHLY' AND event_timestamp >= TIMESTAMP(DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)))
+            )
+            AND currency = '${config.Currency}'
+            AND country_code = '${config.CountryCode}'
+        ),
+        iap_acquisitions__twice AS (
+            SELECT SUM(amount)*2 AS amount
+            FROM datalake.fact_acquisition_event
+            WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < TIMESTAMP(DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH))
+            AND product ='APP_PREMIUM_TIER'
+            AND payment_frequency = 'MONTHLY'
+            AND currency = '${config.Currency}'
+            AND country_code = '${config.CountryCode}'
         )
         SELECT COALESCE(SUM(amount), 0) AS amount FROM (
-            SELECT amount FROM contributions__once UNION ALL
-            SELECT amount FROM contributions__twice UNION ALL
-            SELECT amount FROM supporter_plus_or_tier_three__once UNION ALL
-            SELECT amount FROM supporter_plus_or_tier_three__twice
+                    SELECT amount FROM contributions__once UNION ALL
+                    SELECT amount FROM contributions__twice UNION ALL
+                    SELECT amount FROM supporter_plus_or_tier_three__once UNION ALL
+                    SELECT amount FROM supporter_plus_or_tier_three__twice  ${config.CountryCode === 'AU' ? `UNION ALL
+                    SELECT amount FROM iap_acquisitions__once UNION ALL
+                    SELECT amount FROM iap_acquisitions__twice` : ''}                                                
         )
     `;
 
