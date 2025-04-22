@@ -6,6 +6,8 @@ The calculated ticker value is output to the bucket `contributions-ticker`, with
 
 This file is cached behind fastly in both CODE and PROD, e.g https://support.theguardian.com/ticker/US.json.
 
+[Architecture diagram](https://docs.google.com/drawings/d/1IoSxwMyxt8bDhRsZm-yX-B0nAaHD66anEnnM57A1gMk).
+
 ### Config
 
 The lambda takes the name of a campaign as its input, to tell it which campaign config to use.
