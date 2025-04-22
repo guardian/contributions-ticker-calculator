@@ -1,4 +1,4 @@
-import { buildAuthClient, runQuery } from './lib/bigquery';
+import {buildAuthClient, runQuery} from './lib/bigquery';
 import type {TickerConfig, TickerResult} from './lib/models';
 import { writeToS3 } from "./lib/s3";
 import { getSSMParam } from './lib/ssm';
@@ -20,6 +20,7 @@ export async function handler(campaignName: string): Promise<void> {
     console.log('Using config:', campaignConfig);
 
     const authClient = await buildAuthClient(gcpConfig);
+
     const amount = await runQuery(authClient, stage, campaignConfig);
 
     const result: TickerResult = {

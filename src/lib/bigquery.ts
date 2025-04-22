@@ -2,7 +2,7 @@ import { BigQuery } from '@google-cloud/bigquery';
 import type { BaseExternalAccountClient, ExternalAccountClientOptions } from 'google-auth-library';
 import { ExternalAccountClient } from 'google-auth-library';
 import { z } from 'zod';
-import type { TickerConfig } from './models';
+import type {MoneyTickerConfig, SupporterCountTickerConfig, TickerConfig} from './models';
 
 export const buildAuthClient = (clientConfig: string): Promise<BaseExternalAccountClient> => new Promise((resolve, reject) => {
     const parsedConfig = JSON.parse(clientConfig) as ExternalAccountClientOptions;
@@ -20,21 +20,14 @@ export const BigQueryResultDataSchema = z.array(
     })
 );
 
-export const runQuery = async (
-    authClient: BaseExternalAccountClient,
-    stage: 'CODE' | 'PROD',
-    config: TickerConfig,
-): Promise<number> => {
-    const bigquery = new BigQuery({
-        projectId: `datatech-platform-${stage.toLowerCase()}`,
-        authClient,
-    });
-
+const buildMoneyQuery = (
+    config: MoneyTickerConfig,
+): string => {
     /**
      * We count acquisitions twice if billing period is monthly and two payments will be made during the campaign.
      * Assumes no campaign runs for more than 2 months.
      */
-    const query = `
+    return `
         WITH contributions__once AS (
             SELECT SUM(amount) AS amount
             FROM datalake.fact_acquisition_event 
@@ -104,6 +97,30 @@ export const runQuery = async (
                     SELECT amount FROM iap_acquisitions__twice` : ''}                                                
         )
     `;
+}
+
+const buildSupporterCountQuery =(
+    config: SupporterCountTickerConfig,
+): string => {
+    return `
+        SELECT COUNT(*) AS amount
+        FROM datalake.fact_acquisition_event
+        WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < '${config.EndDate}'
+        AND product IN ('CONTRIBUTION', 'RECURRING_CONTRIBUTION', 'SUPPORTER_PLUS', 'TIER_THREE')
+        AND country_code NOT IN '(${config.ExcludedCountryCodes.join(',')})'
+    `;
+}
+
+export const runQuery = async (
+    authClient: BaseExternalAccountClient,
+    stage: 'CODE' | 'PROD',
+    config: TickerConfig,
+): Promise<number> => {
+    const bigquery = new BigQuery({
+        projectId: `datatech-platform-${stage.toLowerCase()}`,
+        authClient,
+    });
+    const query = config.type === 'Money' ? buildMoneyQuery(config) : buildSupporterCountQuery(config);
 
     console.log('Running query:', query);
 

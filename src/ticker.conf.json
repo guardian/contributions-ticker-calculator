@@ -1,5 +1,6 @@
 {
   "US": {
+    "type": "Money",
     "CountryCode": "US",
     "Currency": "USD",
     "StartDate": "2021-11-22",
@@ -9,6 +10,7 @@
     "GoalAmount": 1250000
   },
   "AU": {
+    "type": "Money",
     "CountryCode": "AU",
     "Currency": "AUD",
     "StartDate": "2021-11-22",
@@ -16,5 +18,14 @@
 
     "InitialAmount": 850000,
     "GoalAmount": 1250000
+  },
+  "global": {
+    "type": "SupporterCount",
+    "StartDate": "2025-04-30",
+    "EndDate": "2025-05-23",
+    "ExcludedCountryCodes": ["AU"],
+
+    "InitialAmount": 0,
+    "GoalAmount": 50000
   }
 }
