@@ -14,7 +14,9 @@ The lambda takes the name of a campaign as its input, to tell it which campaign 
 
 The stack defines a cloudwatch event for each campaign. The event is scheduled for every 15 minutes. Outside of campaigns, the schedule can be disabled manually from the AWS console.
 
-The ticker config is loaded by the lambda from Parameter Store (key: `/ticker-calculator/{STAGE}/ticker-config`). This file contains config for each campaign [./src/ticker.conf.json](see example).
+The ticker config is loaded by the lambda from Parameter Store (key: `/ticker-calculator/{STAGE}/ticker-config`). The [example file](./src/ticker.conf.json) contains config for each campaign.
+
+Setting up a new ticker campaign typically consists of manually setting the dates and goal amount in this Parameter Store config.
 
 ### Data
 
