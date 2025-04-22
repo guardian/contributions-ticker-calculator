@@ -22,7 +22,6 @@ export async function handler(campaignName: string): Promise<void> {
 	console.log('Using config:', campaignConfig);
 
 	const authClient = await buildAuthClient(gcpConfig);
-
 	const amount = await runQuery(authClient, stage, campaignConfig);
 
 	const result: TickerResult = {
