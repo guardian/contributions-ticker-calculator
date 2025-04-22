@@ -26,6 +26,11 @@ export class TickerCalculator extends GuStack {
 				description: 'AU',
 				input: RuleTargetInput.fromText('AU'),
 			},
+			{
+				schedule: Schedule.rate(Duration.minutes(15)),
+				description: 'global',
+				input: RuleTargetInput.fromText('global'),
+			},
 		];
 
 		const role = new Role(this, 'query-lambda-role', {

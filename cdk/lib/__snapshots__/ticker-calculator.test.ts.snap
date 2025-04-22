@@ -154,6 +154,45 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
       },
       "Type": "AWS::Lambda::Permission",
     },
+    "TickerCalculatorTickerCalculatorrate15minutes2AllowEventRuleTickerCalculator3A61D8F5B129E114": {
+      "Properties": {
+        "Action": "lambda:InvokeFunction",
+        "FunctionName": {
+          "Fn::GetAtt": [
+            "TickerCalculator5AB41211",
+            "Arn",
+          ],
+        },
+        "Principal": "events.amazonaws.com",
+        "SourceArn": {
+          "Fn::GetAtt": [
+            "TickerCalculatorTickerCalculatorrate15minutes2F658BDF5",
+            "Arn",
+          ],
+        },
+      },
+      "Type": "AWS::Lambda::Permission",
+    },
+    "TickerCalculatorTickerCalculatorrate15minutes2F658BDF5": {
+      "Properties": {
+        "Description": "global",
+        "ScheduleExpression": "rate(15 minutes)",
+        "State": "ENABLED",
+        "Targets": [
+          {
+            "Arn": {
+              "Fn::GetAtt": [
+                "TickerCalculator5AB41211",
+                "Arn",
+              ],
+            },
+            "Id": "Target0",
+            "Input": ""global"",
+          },
+        ],
+      },
+      "Type": "AWS::Events::Rule",
+    },
     "querylambdaroleC6C8A94B": {
       "Properties": {
         "AssumeRolePolicyDocument": {

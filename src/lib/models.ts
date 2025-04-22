@@ -1,4 +1,5 @@
-interface TickerConfig {
+interface MoneyTickerConfig {
+	type: 'Money';
 	StartDate: string;
 	EndDate: string;
 	CountryCode: string;
@@ -8,9 +9,26 @@ interface TickerConfig {
 	GoalAmount: number;
 }
 
+interface SupporterCountTickerConfig {
+	type: 'SupporterCount';
+	StartDate: string;
+	EndDate: string;
+	ExcludedCountryCodes: string[];
+	InitialAmount: number;
+	GoalAmount: number;
+}
+
+type TickerConfig = MoneyTickerConfig | SupporterCountTickerConfig;
+
 interface TickerResult {
 	total: number;
 	goal: number;
+	type: TickerConfig['type'];
 }
 
-export { TickerConfig, TickerResult };
+export {
+	TickerConfig,
+	TickerResult,
+	MoneyTickerConfig,
+	SupporterCountTickerConfig,
+};
