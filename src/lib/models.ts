@@ -23,6 +23,7 @@ type TickerConfig = MoneyTickerConfig | SupporterCountTickerConfig;
 interface TickerResult {
     total: number;
     goal: number;
+    type: TickerConfig['type'];
 }
 
 export {
