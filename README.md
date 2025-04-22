@@ -1,6 +1,6 @@
 # ticker-calculator
 
-Counts money during a campaign and outputs to an S3 file. Used by epic/banner/thrashers and the support site landing page.
+Counts money or acquisitions during a campaign and outputs to an S3 file. Used by epic/banner/thrashers and the support site landing page.
 
 The calculated ticker value is output to the bucket `contributions-ticker`, with key `{STAGE}/{campaign_name}.json`.
 
@@ -14,13 +14,21 @@ The stack defines a cloudwatch event for each campaign. The event is scheduled f
 
 The ticker config is loaded by the lambda from Parameter Store (key: `/ticker-calculator/{STAGE}/ticker-config`). This file contains config for each campaign [./src/ticker.conf.json](see example).
 
+There are two types of ticker config:
+1. Money
+2. SupporterCount
+
 ### Data
 
+#### Ticker type `Money`
 The lambda queries two tables:
 1. `fact_aquisition_event` for contributions. This table has live acquisitions data, and so contributions will be added to the ticker throughout the day.
 2. `fact_holding_acquisition` for SupporterPlus and ThreeTier. This table is only updated daily, so these acquisitions will only be added to the ticker once a day. This is because the `amount` isn't available in the live `fact_aquisition_event` table.
 
 We also count acquisitions twice if the billing period is monthly and two payments will be made during the campaign. This assumes no campaign runs for more than 2 months.
+
+#### Ticker type `SupporterCount`
+The lambda queries the `fact_aquisition_event` for single/recurring contributions, SupporterPlus and TierThree. This data is live.
 
 ### Testing
 
