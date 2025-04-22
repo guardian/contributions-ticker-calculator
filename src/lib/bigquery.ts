@@ -107,7 +107,7 @@ const buildSupporterCountQuery =(
         FROM datalake.fact_acquisition_event
         WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < '${config.EndDate}'
         AND product IN ('CONTRIBUTION', 'RECURRING_CONTRIBUTION', 'SUPPORTER_PLUS', 'TIER_THREE')
-        AND country_code NOT IN '(${config.ExcludedCountryCodes.join(',')})'
+        AND country_code NOT IN (${config.ExcludedCountryCodes.map(c => `'${c}'`).join(',')})
     `;
 }
 
