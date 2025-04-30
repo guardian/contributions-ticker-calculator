@@ -13,7 +13,6 @@ interface SupporterCountTickerConfig {
 	type: 'SupporterCount';
 	StartDate: string;
 	EndDate: string;
-	ExcludedCountryCodes: string[];
 	InitialAmount: number;
 	GoalAmount: number;
 }

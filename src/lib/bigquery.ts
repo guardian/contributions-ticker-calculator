@@ -147,9 +147,6 @@ const buildSupporterCountQuery = (
 		config.EndDate
 	}'
         AND product IN ('CONTRIBUTION', 'RECURRING_CONTRIBUTION', 'SUPPORTER_PLUS', 'TIER_THREE')
-        AND country_code NOT IN (${config.ExcludedCountryCodes.map(
-					(c) => `'${c}'`,
-				).join(',')})
     `;
 };
 

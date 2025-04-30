@@ -23,7 +23,6 @@
     "type": "SupporterCount",
     "StartDate": "2025-04-30",
     "EndDate": "2025-05-23",
-    "ExcludedCountryCodes": ["AU"],
 
     "InitialAmount": 0,
     "GoalAmount": 50000
