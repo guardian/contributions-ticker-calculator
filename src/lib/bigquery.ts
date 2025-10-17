@@ -40,7 +40,7 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
 	return `
         WITH contributions__once AS (
             SELECT SUM(amount) AS amount
-            FROM datalake.fact_acquisition_event 
+            FROM datalake.fact_acquisition_event
             WHERE event_timestamp >= '${
 							config.StartDate
 						}' AND event_timestamp < '${config.EndDate}'
@@ -95,7 +95,7 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
         ),
         iap_acquisitions__once AS (
             SELECT SUM(amount) AS amount
-            FROM datalake.fact_acquisition_event 
+            FROM datalake.fact_acquisition_event
             WHERE event_timestamp >= '${
 							config.StartDate
 						}' AND event_timestamp < '${config.EndDate}'
@@ -121,7 +121,29 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
             AND payment_frequency = 'MONTHLY'
             AND currency = '${config.Currency}'
             AND country_code = '${config.CountryCode}'
-        )
+        ) ${
+					config.CountryCode === 'AU'
+						? `, guardian_weekly__once AS (
+								SELECT SUM(initial_rate_plan_unit_price_transaction_currency) AS amount
+									FROM reader_revenue.fact_holding_acquisition
+									WHERE acquired_date >= '${config.StartDate}'
+									AND acquired_date < DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)
+										AND reader_revenue_product IN ('Guardian Weekly - Subscription')
+										AND (billing_period in ('Annual','Quarter') OR acquired_date >= DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH))
+										AND transaction_currency = '${config.Currency}'
+										AND country_code = '${config.CountryCode}'
+							),
+							guardian_weekly__twice AS (
+									SELECT SUM(initial_rate_plan_unit_price_transaction_currency)*2 AS amount
+									FROM reader_revenue.fact_holding_acquisition
+									WHERE acquired_date >= '${config.StartDate}' AND acquired_date < DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)
+									AND reader_revenue_product IN ('Guardian Weekly - Subscription')
+									AND billing_period = 'Month'
+									AND transaction_currency = '${config.Currency}'
+									AND country_code = '${config.CountryCode}'
+							)`
+						: ''
+				}
         SELECT COALESCE(SUM(amount), 0) AS amount FROM (
                     SELECT amount FROM contributions__once UNION ALL
                     SELECT amount FROM contributions__twice UNION ALL
@@ -130,9 +152,11 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
 											config.CountryCode === 'AU'
 												? `UNION ALL
                     SELECT amount FROM iap_acquisitions__once UNION ALL
-                    SELECT amount FROM iap_acquisitions__twice`
+                    SELECT amount FROM iap_acquisitions__twice UNION ALL
+										SELECT amount FROM guardian_weekly__once UNION ALL
+										SELECT amount FROM guardian_weekly__twice`
 												: ''
-										}                                                
+										}
         )
     `;
 };
@@ -143,9 +167,7 @@ const buildSupporterCountQuery = (
 	return `
         SELECT COUNT(*) AS amount
         FROM datalake.fact_acquisition_event
-        WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < '${
-		config.EndDate
-	}'
+        WHERE event_timestamp >= '${config.StartDate}' AND event_timestamp < '${config.EndDate}'
         AND product IN ('CONTRIBUTION', 'RECURRING_CONTRIBUTION', 'SUPPORTER_PLUS', 'TIER_THREE')
     `;
 };
