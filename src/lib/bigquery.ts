@@ -124,24 +124,24 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
         ) ${
 					config.CountryCode === 'AU'
 						? `, guardian_weekly__once AS (
-								SELECT SUM(initial_rate_plan_unit_price_transaction_currency) AS amount
-									FROM reader_revenue.fact_holding_acquisition
-									WHERE acquired_date >= '${config.StartDate}'
-									AND acquired_date < DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)
-										AND reader_revenue_product IN ('Guardian Weekly - Subscription')
-										AND (billing_period in ('Annual','Quarter') OR acquired_date >= DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH))
-										AND transaction_currency = '${config.Currency}'
-										AND country_code = '${config.CountryCode}'
-							),
-							guardian_weekly__twice AS (
-									SELECT SUM(initial_rate_plan_unit_price_transaction_currency)*2 AS amount
-									FROM reader_revenue.fact_holding_acquisition
-									WHERE acquired_date >= '${config.StartDate}' AND acquired_date < DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)
-									AND reader_revenue_product IN ('Guardian Weekly - Subscription')
-									AND billing_period = 'Month'
-									AND transaction_currency = '${config.Currency}'
-									AND country_code = '${config.CountryCode}'
-							)`
+            SELECT SUM(initial_rate_plan_unit_price_transaction_currency) AS amount
+            FROM reader_revenue.fact_holding_acquisition
+            WHERE acquired_date >= '${config.StartDate}'
+            AND acquired_date < DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)
+            AND reader_revenue_product IN ('Guardian Weekly - Subscription')
+            AND (billing_period in ('Annual','Quarter') OR acquired_date >= DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH))
+            AND transaction_currency = '${config.Currency}'
+            AND country_code = '${config.CountryCode}'
+          ),
+        	guardian_weekly__twice AS (
+            SELECT SUM(initial_rate_plan_unit_price_transaction_currency)*2 AS amount
+            FROM reader_revenue.fact_holding_acquisition
+            WHERE acquired_date >= '${config.StartDate}' AND acquired_date < DATE_SUB('${config.EndDate}', INTERVAL 1 MONTH)
+            AND reader_revenue_product IN ('Guardian Weekly - Subscription')
+            AND billing_period = 'Month'
+            AND transaction_currency = '${config.Currency}'
+            AND country_code = '${config.CountryCode}'
+          )`
 						: ''
 				}
         SELECT COALESCE(SUM(amount), 0) AS amount FROM (
@@ -153,8 +153,8 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
 												? `UNION ALL
                     SELECT amount FROM iap_acquisitions__once UNION ALL
                     SELECT amount FROM iap_acquisitions__twice UNION ALL
-										SELECT amount FROM guardian_weekly__once UNION ALL
-										SELECT amount FROM guardian_weekly__twice`
+                    SELECT amount FROM guardian_weekly__once UNION ALL
+                    SELECT amount FROM guardian_weekly__twice`
 												: ''
 										}
         )
