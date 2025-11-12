@@ -8,8 +8,8 @@ The calculated ticker value is output to the private S3 bucket `contributions-ti
 - For **support-dotcom-components** (SDC): The data is read directly from the private S3 bucket
 - For **support-frontend**: The data is read directly from the private S3 bucket
 - For **other services** (e.g., thrashers): Use the SDC endpoint at:
-  - PROD: `https://contributions.guardianapis.com/ticker/{campaign_name}.json`
-  - CODE: `https://contributions.code.dev-guardianapis.comticker/{campaign_name}.json`
+  - PROD: `https://contributions.guardianapis.com/ticker/{name}`
+  - CODE: `https://contributions.code.dev-guardianapis.com/ticker/{name}`
 
 The legacy Fastly-cached public URLs (e.g., `https://support.theguardian.com/ticker/US.json`) are no longer available.
 
