@@ -73,7 +73,7 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
             WHERE acquired_date >= '${config.StartDate}' AND acquired_date < '${
 		config.EndDate
 	}'
-            AND reader_revenue_product IN ('Supporter Plus', 'Tier Three')
+            AND reader_revenue_product IN ('Supporter Plus', 'Tier Three', 'Digital Subscription')
             AND (billing_period = 'Annual' OR acquired_date >= DATE_SUB('${
 							config.EndDate
 						}', INTERVAL 1 MONTH))
@@ -88,7 +88,7 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
 						}' AND acquired_date < DATE_SUB('${
 		config.EndDate
 	}', INTERVAL 1 MONTH)
-            AND reader_revenue_product IN ('Supporter Plus', 'Tier Three')
+            AND reader_revenue_product IN ('Supporter Plus', 'Tier Three', 'Digital Subscription')
             AND billing_period = 'Month'
             AND transaction_currency = '${config.Currency}'
             AND country_code = '${config.CountryCode}'
