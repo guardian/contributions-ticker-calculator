@@ -68,7 +68,7 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
             AND country_code = '${config.CountryCode}'
         ),
         supporter_plus_or_tier_three__once AS (
-            SELECT SUM(first_payment_unit_price_transaction_currency) AS amount
+            SELECT SUM(initial_rate_plan_unit_price_transaction_currency) AS amount
             FROM reader_revenue.fact_holding_acquisition
             WHERE acquired_date >= '${config.StartDate}' AND acquired_date < '${
 		config.EndDate
@@ -81,7 +81,7 @@ const buildMoneyQuery = (config: MoneyTickerConfig): string => {
             AND country_code = '${config.CountryCode}'
         ),
         supporter_plus_or_tier_three__twice AS (
-            SELECT SUM(first_payment_unit_price_transaction_currency)*2 AS amount
+            SELECT SUM(initial_rate_plan_unit_price_transaction_currency)*2 AS amount
             FROM reader_revenue.fact_holding_acquisition
             WHERE acquired_date >= '${
 							config.StartDate
