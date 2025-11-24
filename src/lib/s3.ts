@@ -17,7 +17,6 @@ export function writeToS3<T>({
 			Bucket: bucket,
 			Key: key,
 			Body: JSON.stringify(data),
-			ACL: 'public-read',
 			CacheControl: 'max-age=300',
 		})
 		.promise();
