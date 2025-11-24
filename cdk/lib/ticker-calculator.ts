@@ -55,8 +55,8 @@ export class TickerCalculator extends GuStack {
 			new PolicyStatement({
 				actions: ['s3:*'],
 				resources: [
-					`arn:aws:s3::*:${TickerBucket}/*`,
-					`arn:aws:s3::*:${TickerBucket}`,
+					`arn:aws:s3::*:${TickerBucket}/${this.stage}/*`,
+					`arn:aws:s3::*:${TickerBucket}/${this.stage}`,
 				],
 			}),
 		);

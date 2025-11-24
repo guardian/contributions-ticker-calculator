@@ -246,8 +246,8 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
               "Action": "s3:*",
               "Effect": "Allow",
               "Resource": [
-                "arn:aws:s3::*:contributions-ticker/*",
-                "arn:aws:s3::*:contributions-ticker",
+                "arn:aws:s3::*:contributions-ticker/TEST/*",
+                "arn:aws:s3::*:contributions-ticker/TEST",
               ],
             },
             {
