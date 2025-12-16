@@ -1,12 +1,19 @@
 # ticker-calculator
 
-Counts money or acquisitions during a campaign and outputs to an S3 file. Used by epic/banner/thrashers and the support site landing page.
+Counts money or acquisitions during a campaign and outputs to an S3 file. Used by epic/banner and the support site landing page.
 
-The calculated ticker value is output to the bucket `contributions-ticker`, with key `{STAGE}/{campaign_name}.json`.
+The calculated ticker value is output to the private S3 bucket `contributions-ticker`, with key `{STAGE}/{campaign_name}.json`.
 
-This file is cached behind fastly in both CODE and PROD, e.g https://support.theguardian.com/ticker/US.json.
+**Access to ticker data:**
+- For **support-dotcom-components** (SDC): The data is read directly from the private S3 bucket
+- For **support-frontend**: The data is read directly from the private S3 bucket
+- For **other services** (e.g., thrashers): Use the SDC endpoint at:
+  - PROD: `https://contributions.guardianapis.com/ticker/{name}`
+  - CODE: `https://contributions.code.dev-guardianapis.com/ticker/{name}`
 
-[Architecture diagram](https://docs.google.com/drawings/d/1IoSxwMyxt8bDhRsZm-yX-B0nAaHD66anEnnM57A1gMk).
+The legacy Fastly-cached public URLs (e.g., `https://support.theguardian.com/ticker/US.json`) are no longer available.
+
+[Architecture diagram](https://docs.google.com/drawings/d/1IoSxwMyxt8bDhRsZm-yX-B0nAaHD66anEnnM57A1gMk) (needs updating).
 
 ### Config
 
