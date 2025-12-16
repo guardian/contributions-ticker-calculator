@@ -55,7 +55,7 @@ jobs:
           aws-region: eu-west-1
 
       - name: riff-raff
-        uses: guardian/actions-riff-raff@v2
+        uses: guardian/actions-riff-raff@v4
         with:
           app: ticker-calculator
           config: |
