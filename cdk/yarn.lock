@@ -400,10 +400,10 @@
   resolved "https://registry.yarnpkg.com/@guardian/prettier/-/prettier-5.0.0.tgz#0cd36b105512510192ea9fd18da3d3df2d7b3b72"
   integrity sha512-gJSQuuP7JVDOWQj4EUrwyJTnMt+frLkw0D2sLg70nHn76L3LmH2xTQtYMPUsqyqn37qocDPzgdvBdmATi50zRQ==
 
-"@guardian/tsconfig@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@guardian/tsconfig/-/tsconfig-1.0.0.tgz#c86b8cf51ccb53b2783eeffb6d5f256c59094217"
-  integrity sha512-xgajw/jq4lEtQoN72vnmiXeRnejUcd3DgNFmH6TfAbWV6NRK4KC4hAjzKf0H69zBSJMxEfFVfGKP9wBzGII7qg==
+"@guardian/tsconfig@^1.0.1":
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/@guardian/tsconfig/-/tsconfig-1.0.1.tgz#010fa1c2af6418a1a208507e36ca27b7eec5b9b3"
+  integrity sha512-PB24nZ6WTBB8aZ9EyxJw1vC5FYkGqwMQ/O5Oogp6P5HCQU5MN0JpUXvpYci7kwV2oXD1Az06UBnLyyVXOVMadQ==
 
 "@humanwhocodes/config-array@^0.11.14":
   version "0.11.14"
