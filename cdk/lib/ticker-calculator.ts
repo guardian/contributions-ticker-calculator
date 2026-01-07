@@ -74,7 +74,7 @@ export class TickerCalculator extends GuStack {
 		new GuScheduledLambda(this, 'TickerCalculator', {
 			app: AppName,
 			functionName: `${AppName}-${this.stage}`,
-			runtime: Runtime.NODEJS_20_X,
+			runtime: Runtime.NODEJS_22_X,
 			handler: 'lambda.handler',
 			fileName: `${AppName}.zip`,
 			rules: scheduleRules,
@@ -89,7 +89,7 @@ export class TickerCalculator extends GuStack {
 					? {
 							toleratedErrorPercentage: 0,
 							snsTopicName: 'alarms-handler-topic-PROD',
-						}
+					  }
 					: { noMonitoring: true },
 		});
 	}
