@@ -13,7 +13,7 @@ The calculated ticker value is output to the private S3 bucket `contributions-ti
 
 The legacy Fastly-cached public URLs (e.g., `https://support.theguardian.com/ticker/US.json`) are no longer available.
 
-[Architecture diagram](https://docs.google.com/drawings/d/1IoSxwMyxt8bDhRsZm-yX-B0nAaHD66anEnnM57A1gMk) (needs updating).
+[Architecture diagram](https://docs.google.com/drawings/d/1IoSxwMyxt8bDhRsZm-yX-B0nAaHD66anEnnM57A1gMk).
 
 ### Config
 
