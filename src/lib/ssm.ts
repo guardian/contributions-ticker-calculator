@@ -1,23 +1,25 @@
-import * as AWS from 'aws-sdk';
+import { GetParameterCommand, SSMClient } from '@aws-sdk/client-ssm';
 
-export const getSSMParam = (
+export const getSSMParam = async (
 	key: string,
 	stage: 'CODE' | 'PROD',
 ): Promise<string> => {
-	const ssm = new AWS.SSM({ region: 'eu-west-1' });
-	return ssm
-		.getParameter({
-			Name: `/ticker-calculator/${stage}/${key}`,
-			WithDecryption: true,
-		})
-		.promise()
-		.then((result) => {
-			const value = result.Parameter?.Value;
+	const ssm = new SSMClient({ region: 'eu-west-1' });
+	const command = new GetParameterCommand({
+		Name: `/ticker-calculator/${stage}/${key}`,
+		WithDecryption: true,
+	});
 
-			if (value) {
-				return value;
-			}
+	try {
+		const result = await ssm.send(command);
+		const value = result.Parameter?.Value;
 
-			throw new Error(`Failed to retrieve config from parameter store: ${key}`);
-		});
+		if (value) {
+			return value;
+		}
+
+		throw new Error(`Failed to retrieve config from parameter store: ${key}`);
+	} catch (error) {
+		throw new Error(`Failed to retrieve config from parameter store: ${key}`);
+	}
 };
