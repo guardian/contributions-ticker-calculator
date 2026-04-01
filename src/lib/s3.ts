@@ -1,5 +1,8 @@
-import * as AWS from 'aws-sdk';
-import type { ManagedUpload } from 'aws-sdk/lib/s3/managed_upload';
+import {
+	type CompleteMultipartUploadCommandOutput,
+	S3Client,
+} from '@aws-sdk/client-s3';
+import { Upload } from '@aws-sdk/lib-storage';
 
 export function writeToS3<T>({
 	data,
@@ -9,15 +12,18 @@ export function writeToS3<T>({
 	data: T;
 	bucket: string;
 	key: string;
-}): Promise<ManagedUpload.SendData> {
-	const s3 = new AWS.S3();
+}): Promise<CompleteMultipartUploadCommandOutput> {
+	const s3 = new S3Client({});
 
-	return s3
-		.upload({
+	const upload = new Upload({
+		client: s3,
+		params: {
 			Bucket: bucket,
 			Key: key,
 			Body: JSON.stringify(data),
 			CacheControl: 'max-age=300',
-		})
-		.promise();
+		},
+	});
+
+	return upload.done();
 }
