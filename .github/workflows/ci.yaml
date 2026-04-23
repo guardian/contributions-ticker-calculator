@@ -21,32 +21,36 @@ jobs:
       - name: Checkout repo
         uses: actions/checkout@v3
 
-      - name: Setup Node
-        uses: actions/setup-node@v3
+      - run: npm install --global corepack@0.31.0
+        shell: bash
+
+      - run: corepack enable
+        shell: bash
+
+      - name: Use Node.js
+        uses: actions/setup-node@v6
         with:
           node-version-file: '.nvmrc'
 
       - name: build
         run: |
-          npm install -g yarn
-          yarn install
-          yarn lint
-          yarn run build
+          pnpm install
+          pnpm lint
+          pnpm build
 
           cp package.json target
           pushd target
-          yarn install --production
+          pnpm install --production
           zip -r ticker-calculator ./*
           popd
 
       - name: Build cdk
         working-directory: ./cdk
         run: |
-          npm install -g yarn
-          yarn install
-          yarn lint
-          yarn test
-          yarn synth
+          pnpm install
+          pnpm lint
+          pnpm test
+          pnpm synth
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
