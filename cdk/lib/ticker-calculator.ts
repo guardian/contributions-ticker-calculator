@@ -89,7 +89,7 @@ export class TickerCalculator extends GuStack {
 					? {
 							toleratedErrorPercentage: 0,
 							snsTopicName: 'alarms-handler-topic-PROD',
-					  }
+						}
 					: { noMonitoring: true },
 		});
 	}
