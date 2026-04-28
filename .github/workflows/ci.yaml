@@ -62,6 +62,8 @@ jobs:
         uses: guardian/actions-riff-raff@v4.2.6
         with:
           app: ticker-calculator
+          roleArn: ${{ secrets.GU_RIFF_RAFF_ROLE_ARN }}
+          githubToken: ${{ secrets.GITHUB_TOKEN }}
           config: |
             stacks:
               - support
