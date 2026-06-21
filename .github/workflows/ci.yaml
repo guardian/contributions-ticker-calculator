@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6.0.3
 
       - run: npm install --global corepack@0.31.0
         shell: bash
