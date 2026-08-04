@@ -81,6 +81,28 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
         "Description": "US",
         "ScheduleExpression": "rate(15 minutes)",
         "State": "ENABLED",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "ticker-calculator",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/contributions-ticker-calculator",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
         "Targets": [
           {
             "Arn": {
@@ -120,6 +142,28 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
         "Description": "AU",
         "ScheduleExpression": "rate(15 minutes)",
         "State": "ENABLED",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "ticker-calculator",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/contributions-ticker-calculator",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
         "Targets": [
           {
             "Arn": {
@@ -178,6 +222,28 @@ exports[`The TickerCalculator stack matches the snapshot 1`] = `
         "Description": "global",
         "ScheduleExpression": "rate(15 minutes)",
         "State": "ENABLED",
+        "Tags": [
+          {
+            "Key": "App",
+            "Value": "ticker-calculator",
+          },
+          {
+            "Key": "gu:cdk:version",
+            "Value": "TEST",
+          },
+          {
+            "Key": "gu:repo",
+            "Value": "guardian/contributions-ticker-calculator",
+          },
+          {
+            "Key": "Stack",
+            "Value": "support",
+          },
+          {
+            "Key": "Stage",
+            "Value": "TEST",
+          },
+        ],
         "Targets": [
           {
             "Arn": {
