@@ -23,7 +23,6 @@
     "@guardian/prettier": "1.0.0",
     "@types/jest": "30.0.0",
     "@types/node": "25.6.0",
-    "@types/node-fetch": "2.6.13",
     "esbuild": "0.28.0",
     "eslint": "8.57.1",
     "jest": "30.3.0",
