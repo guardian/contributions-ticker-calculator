@@ -9,7 +9,7 @@ export async function handler(campaignName: string): Promise<void> {
 	console.log('campaignName: ', campaignName);
 	const stage = process.env.Stage;
 	if (!stage || (stage !== 'CODE' && stage !== 'PROD')) {
-		return Promise.reject(`Invalid or missing stage: '${stage ?? ''}'`);
+		return Promise.reject(new Error(`Invalid or missing stage: '${stage ?? ''}'`));
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment -- config

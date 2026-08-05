@@ -22,7 +22,7 @@ export const buildAuthClient = (
 		if (authClient) {
 			resolve(authClient);
 		} else {
-			reject('Failed to create Google Auth Client');
+            reject(new Error('Failed to create Google Auth Client'));
 		}
 	});
 
@@ -196,5 +196,5 @@ export const runQuery = async (
 		return resultData[0].amount;
 	}
 
-	return Promise.reject('No data returned from BigQuery');
+    return Promise.reject(new Error('No data returned from BigQuery'));
 };
