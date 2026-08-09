@@ -23,8 +23,8 @@ importers:
         specifier: 10.0.0
         version: 10.0.0(prettier@3.8.3)(tslib@2.8.1)
       '@guardian/tsconfig':
-        specifier: 1.0.1
-        version: 1.0.1
+        specifier: 2.0.0
+        version: 2.0.0
       '@types/jest':
         specifier: 30.0.0
         version: 30.0.0
@@ -88,6 +88,9 @@ packages:
   '@aws-sdk/core@3.977.5':
     resolution: {integrity: sha512-O5otOc1c6UZh5HsHAaPdYBcUUR9HL6mtnKqvc8nxN/CKDGUBUpsdh0q8K04Uz/dd1i0TaGyIQuQNqoO7+ad2TQ==}
     engines: {node: '>=20.0.0'}
+    deprecated: |-
+      Deprecated due to Document number parsing bug in JSON, see
+        https://github.com/aws/aws-sdk-js-v3/issues/8246. Newer version available.
 
   '@aws-sdk/credential-provider-cognito-identity@3.972.65':
     resolution: {integrity: sha512-1DfK/WvYHlalaejpsmG+oQESu5QC06ylhIgSH8YUt+ZHJdh7/bJsQDVUpbN+tE9GkJG7id+m3+nop+oEw2m9Rw==}
@@ -386,8 +389,8 @@ packages:
       prettier: ^3.7.4
       tslib: ^2.8.1
 
-  '@guardian/tsconfig@1.0.1':
-    resolution: {integrity: sha512-PB24nZ6WTBB8aZ9EyxJw1vC5FYkGqwMQ/O5Oogp6P5HCQU5MN0JpUXvpYci7kwV2oXD1Az06UBnLyyVXOVMadQ==}
+  '@guardian/tsconfig@2.0.0':
+    resolution: {integrity: sha512-alvlrRwOF42tCcxkT4zL+0wauoywMK9FzRgZgx8BV/4ggVEUARTTeCc+HXIbG8Gj9EZkFWFVWJJrFLwqJAkgBw==}
 
   '@humanwhocodes/config-array@0.13.0':
     resolution: {integrity: sha512-DZLEEqFWQFiyK6h5YIeynKx7JlvCYWL0cImfSRXZ9l4Sg2efkFGTuFf6vzXjK1cq6IYkU+Eg/JizXw+TD2vRNw==}
@@ -3229,7 +3232,7 @@ snapshots:
       prettier: 3.8.3
       tslib: 2.8.1
 
-  '@guardian/tsconfig@1.0.1': {}
+  '@guardian/tsconfig@2.0.0': {}
 
   '@humanwhocodes/config-array@0.13.0':
     dependencies:
