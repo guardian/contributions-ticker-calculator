@@ -1,3 +1,4 @@
+import { describe, it, expect } from '@jest/globals';
 import { App } from 'aws-cdk-lib';
 import { Template } from 'aws-cdk-lib/assertions';
 import { TickerCalculator } from './ticker-calculator';
