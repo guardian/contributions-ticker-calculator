@@ -23,8 +23,8 @@ importers:
         specifier: 3.1156.0
         version: 3.1156.0
       '@aws-sdk/lib-storage':
-        specifier: 3.1045.0
-        version: 3.1045.0(@aws-sdk/client-s3@3.1161.0)
+        specifier: 3.1161.0
+        version: 3.1161.0(@aws-sdk/client-s3@3.1161.0)
       '@google-cloud/bigquery':
         specifier: 9.5.0
         version: 9.5.0
@@ -155,11 +155,11 @@ packages:
     resolution: {integrity: sha512-zKTyLJBEyfQBVlYqT6Jt+mYV4r8kGbWM7dn6v4Y4MRARizhYafjDXP/iMu76UMRhToSPNmIKX1XAb24gtpBFIA==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/lib-storage@3.1045.0':
-    resolution: {integrity: sha512-F7dp2ST/83Iz6JTMMmUYEXxg7R1JDewfvzJeWWiDTwe0vLsg67JTN7OsBe6G8DWYbLQ+EyPWkyc3oFnxOjCVfg==}
+  '@aws-sdk/lib-storage@3.1161.0':
+    resolution: {integrity: sha512-ROSytGylVRtkUsp64mpzryv1Puvgo6jAm4RWTW2m3kC4SSsjrvhqZa5uPKfz116a0U1kk/hBz9S1eBItkyd++w==}
     engines: {node: '>=20.0.0'}
     peerDependencies:
-      '@aws-sdk/client-s3': ^3.1045.0
+      '@aws-sdk/client-s3': ^3.1161.0
 
   '@aws-sdk/middleware-sdk-s3@3.972.85':
     resolution: {integrity: sha512-Kyl2G6zhIS9qFoeLdlxvXFrWyc6g9D9ZCIRJnGkkfX6JZhxCZB5ebXBc7GKEeetrnhXcail6ALZT0lKbojcaNA==}
@@ -907,10 +907,6 @@ packages:
     resolution: {integrity: sha512-ycSJu3tFAQ4v04CBB0agqFMVsSQ1iG3yw+SpgxRqKfaURpQD4CZ8Wn0zPMmSnOuTpTh65Vz+EA0rMrw089wvkA==}
     engines: {node: '>=18.0.0'}
 
-  '@smithy/middleware-endpoint@4.5.1':
-    resolution: {integrity: sha512-qtqu5TS+8Y18ZDkJoiXN5AMW1G4JAg1+xytzpsUvIR5a4EUsgd5HQg12lekEHWpm2TDUmOgg+hBaHK7dvyWdkA==}
-    engines: {node: '>=18.0.0'}
-
   '@smithy/node-http-handler@4.12.1':
     resolution: {integrity: sha512-ThMkboGeONWXAelq9FvGsuJC4rOi+qyC4/zhUF58xYpxUg5sQKx2VXZYJmtNjr4dSuBJ1HeJXETQILCz3wOHvw==}
     engines: {node: '>=18.0.0'}
@@ -919,24 +915,12 @@ packages:
     resolution: {integrity: sha512-/T6E1jzCL0fErS9uq8JqES/5yYQQ4ppVmmYHwXw2nlov8KFzLb+3QqHR5iAun1BsuAB50IPxZliV8YMgghLwhA==}
     engines: {node: '>=18.0.0'}
 
-  '@smithy/protocol-http@5.4.1':
-    resolution: {integrity: sha512-8irPNCQgYxcSFp1aGcnDNFkTwSA+xPUaFq9V/v1+JXWu8sKr5b3cFmg2kBTkjkvypDmGeNffuNu0x5iqw1NoAw==}
-    engines: {node: '>=18.0.0'}
-
   '@smithy/signature-v4@5.7.4':
     resolution: {integrity: sha512-tHy0K0VtqNd5Y7Y41h0a0Lhh0L1GzC08dTWg0F7vRJWFtTENg7IZikf3wQkanYIRdb7ngoIPMTmqgUi401fEeQ==}
     engines: {node: '>=18.0.0'}
 
   '@smithy/signature-v4@5.7.5':
     resolution: {integrity: sha512-WPjdr5oWOk1LArpI4pavu+fSo+/evi0Re1olxGvqwuZopd4gYR1UGCi+Soyn/IjmafqbWs+ZC+3AKxJS3ZpwUg==}
-    engines: {node: '>=18.0.0'}
-
-  '@smithy/smithy-client@4.13.1':
-    resolution: {integrity: sha512-IcznNM8Qd9u1X3oflp12tkzyOB4HbT+sfYWlWiyEysgNzSHoWcHUUsTT4y1jjDjtVuuVVQbYks+g1kVd7u1eGQ==}
-    engines: {node: '>=18.0.0'}
-
-  '@smithy/types@4.14.1':
-    resolution: {integrity: sha512-59b5HtSVrVR/eYNei3BUj3DCPKD/G7EtDDe7OEJE7i7FtQFugYo6MxbotS8mVJkLNVf8gYaAlEBwwtJ9HzhWSg==}
     engines: {node: '>=18.0.0'}
 
   '@smithy/types@4.19.0':
@@ -3398,17 +3382,15 @@ snapshots:
       '@smithy/types': 4.19.0
       tslib: 2.9.1
 
-  '@aws-sdk/lib-storage@3.1045.0(@aws-sdk/client-s3@3.1161.0)':
+  '@aws-sdk/lib-storage@3.1161.0(@aws-sdk/client-s3@3.1161.0)':
     dependencies:
       '@aws-sdk/client-s3': 3.1161.0
-      '@smithy/middleware-endpoint': 4.5.1
-      '@smithy/protocol-http': 5.4.1
-      '@smithy/smithy-client': 4.13.1
-      '@smithy/types': 4.14.1
+      '@smithy/core': 3.38.1
+      '@smithy/types': 4.19.0
       buffer: 5.6.0
       events: 3.3.0
       stream-browserify: 3.0.0
-      tslib: 2.8.1
+      tslib: 2.9.1
 
   '@aws-sdk/middleware-sdk-s3@3.972.85':
     dependencies:
@@ -4256,11 +4238,6 @@ snapshots:
       '@smithy/types': 4.19.0
       tslib: 2.9.1
 
-  '@smithy/middleware-endpoint@4.5.1':
-    dependencies:
-      '@smithy/core': 3.38.1
-      tslib: 2.9.1
-
   '@smithy/node-http-handler@4.12.1':
     dependencies:
       '@smithy/core': 3.38.1
@@ -4273,11 +4250,6 @@ snapshots:
       '@smithy/types': 4.19.0
       tslib: 2.9.1
 
-  '@smithy/protocol-http@5.4.1':
-    dependencies:
-      '@smithy/core': 3.38.1
-      tslib: 2.9.1
-
   '@smithy/signature-v4@5.7.4':
     dependencies:
       '@smithy/core': 3.38.1
@@ -4288,16 +4260,6 @@ snapshots:
     dependencies:
       '@smithy/core': 3.38.1
       '@smithy/types': 4.19.0
-      tslib: 2.9.1
-
-  '@smithy/smithy-client@4.13.1':
-    dependencies:
-      '@smithy/core': 3.38.1
-      '@smithy/types': 4.19.0
-      tslib: 2.9.1
-
-  '@smithy/types@4.14.1':
-    dependencies:
       tslib: 2.9.1
 
   '@smithy/types@4.19.0':
