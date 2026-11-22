@@ -26,8 +26,8 @@ importers:
         specifier: 3.1161.0
         version: 3.1161.0(@aws-sdk/client-s3@3.1161.0)
       '@google-cloud/bigquery':
-        specifier: 9.6.0
-        version: 9.6.0
+        specifier: 9.6.1
+        version: 9.6.1
       google-auth-library:
         specifier: 11.3.3
         version: 11.3.3
@@ -563,8 +563,8 @@ packages:
     resolution: {integrity: sha512-d9zaMRSTIKDLhctzH12MtXvJKSSUhaHcjV+2Z+GK+EEY7XKpP5yR4x+N3TAcHTcu963nIr+TMcCb4DBCYX1z6Q==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
 
-  '@google-cloud/bigquery@9.6.0':
-    resolution: {integrity: sha512-kL2s2gs6IkAAd/mMEXoBUTxamWMq+KXQrLanolbDD1UU/GRAAxZwl0gsFFDqBYWphF0yObN9WenrtD7DpOqTpg==}
+  '@google-cloud/bigquery@9.6.1':
+    resolution: {integrity: sha512-+uluOi66FjTdW19p0nnJ5+rqsffS0ykHynJU7svDmA9uMn3C+pKOwOgnudmV8gDoPvAefmSPbZF/z2PqJ0TSPQ==}
     engines: {node: '>=22'}
     peerDependencies:
       '@google-cloud/bigquery-storage': ^6.3.0
@@ -3774,7 +3774,7 @@ snapshots:
 
   '@eslint/js@8.57.1': {}
 
-  '@google-cloud/bigquery@9.6.0':
+  '@google-cloud/bigquery@9.6.1':
     dependencies:
       '@google-cloud/common': 8.2.2
       '@google-cloud/paginator': 7.2.0
